@@ -8,8 +8,6 @@ $|if[$|floor[$|calculate[$|var[rR\]/10\]\]>0\]$|var[code\;$|repeatMessage[$|floo
 $|if[$|modulo[$|var[rR\]\;10\]>0\]$|var[code\;$|var[code\]$|repeatMessage[$|modulo[$|var[rR\]\;10\]\;$|var[rB\]\]\]$|endif]$var[RG;$replaceText[$var[RG];|;;-1]]
 
 
-$c[THE GAME LIVES IN ITS OWN MESSAGE. The end of the description has a link with invisible text that keeps the state, the board with the legal moves, the imported position, the time of the last move and the PGN. No variables, and each game is its own message, so a channel can have several]
-$c[EMOJIS FROM SERVERS. For those who don't want to paste the bot token on the site. !chess emojis reads the emojis of this server, or of up to 5 servers whose IDs come after it (the bot must be in them). The mnsa_ prefix of the pack is removed. The reply is the text to paste into the ChessEmojis variable in the app]
 $if[$toLowercase[$message[1]]==emojis]
 $var[ids;$message[2] $message[3] $message[4] $message[5] $message[6]]
 $if[$message[2]==]$var[ids;$guildID]$endif
@@ -41,11 +39,9 @@ $endif
 $var[op;$mentioned[1]]
 $onlyIf[$var[op]!=;Use `!chess @user` to challenge someone.]
 $onlyIf[$var[op]!=$authorID;You can't play against yourself.]
-$c[AGAINST A BOT. Bots don't press buttons, so the challenger plays both white and black]
 $var[pretas;$var[op]]
 $if[$isBot[$var[op]]==true]$var[pretas;$authorID]$endif
 
-$c[INVITE. Before starting, the screen shows who plays which color and the settings. The game starts when both accept. Against a bot, only the challenger accepts]
 $var[brancas;$authorID]
 $var[og;1]$var[oc;1]$var[od;1]$var[ab;0]$var[ap;0]$var[ot;0]
 $var[st;invite-$var[brancas]-$var[pretas]-1-1-1-0-0-0]$var[tb;]$var[pgni;]$var[pgnv;]$var[at;$getTimestamp]$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
