@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chess emojis · MNSA</title>
+<meta name="description" content="Sobe os 143 emojis do xadrez de BDFD no seu bot e devolve o valor da variável ChessEmojis. Funciona no celular.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="/assets/img/logo-hirozn.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css?v=3">
+<style>
+/* Só o que a página precisa a mais que o site.css. Mobile first: tudo empilhado; a partir de 760px o formulário respira mais */
+.lang{display:flex;gap:8px;align-self:flex-start}
+.lang button{min-height:44px;min-width:56px;border-radius:999px;border:1px solid #333;background:#000;color:var(--sub);font-family:var(--mono);font-weight:600;font-size:14px;letter-spacing:2px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tool{display:flex;flex-direction:column;gap:16px;border-radius:24px;background:var(--card);border:1px solid var(--line);padding:20px}
+.tool label{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--meta);text-transform:uppercase}
+.tool input,.tool textarea{width:100%;box-sizing:border-box;min-height:52px;border-radius:14px;border:1px solid #333;background:var(--code);color:var(--fg);font-family:var(--mono);font-size:16px;padding:14px}
+.tool textarea{min-height:140px;resize:vertical;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.tool .btn{width:100%}
+.tool .btn[disabled]{opacity:.5;cursor:wait}
+.bar{height:10px;border-radius:999px;background:#1f1f1f;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.status{font-family:var(--mono);font-size:14px;line-height:1.6;color:var(--body);min-height:1.6em}
+.status.erro{color:var(--accent)}
+.steps{list-style:none;margin:0;padding:0;border-top:1px solid var(--line);counter-reset:s}
+.steps li{display:block;position:relative;padding:20px 0 20px 44px;border-bottom:1px solid var(--line);font-size:17px;line-height:1.55;color:var(--body);counter-increment:s}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:15px;color:var(--accent);position:absolute;left:0;top:23px}
+.steps code,.tool code,.lede code{font-family:var(--mono);font-size:.82em;color:#fff;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:2px 6px;overflow-wrap:anywhere}
+.warn{border-radius:20px;border:2px solid var(--accent);padding:20px;font-size:16px;line-height:1.55;color:var(--body)}
+.warn b{color:#fff}
+[hidden]{display:none!important}
+@media (min-width:760px){.tool{padding:32px}.tool .btn{width:auto;align-self:flex-start}}
+/* PC: a página não estica na tela toda; coluna de leitura centralizada, passos com respiro */
+@media (min-width:1024px){main.case{max-width:880px;margin-inline:auto}.steps li{margin-bottom:10px}.lede{max-width:68ch}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="grid-bg"></div>
+<main class="case">
+
+<section class="case-top">
+  <div class="case-intro">
+    <a class="back" href="/#trabalhos"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg><span data-t="voltar"></span></a>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <div class="case-kicker"><span class="pill">BDFD.</span><span class="meta" data-t="kicker"></span></div>
+    <h1 class="h-display" style="font-size:clamp(56px,14vw,160px)">Chess emojis<span class="dot">.</span></h1>
+    <p class="lede" data-t="lede"></p>
+  </div>
+</section>
+
+<section>
+  <div class="tool">
+    <label for="token" data-t="rotulo"></label>
+    <input id="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" data-ph="ph">
+    <button class="btn btn-white" id="subir" type="button" data-t="botao"></button>
+    <div class="bar" hidden><i></i></div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <div id="saida" hidden>
+      <label for="valor" data-t="saida"></label>
+      <textarea id="valor" readonly></textarea>
+      <button class="btn btn-white" id="copiar" type="button" data-t="copiar"></button>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="warn" data-t="aviso"></div>
+</section>
+
+<section>
+  <div class="sec-label"><span class="meta" data-t="passosMeta"></span><h2 class="h-sec" data-t="passosTit"></h2></div>
+  <ol class="steps">
+    <li data-t="p1"></li>
+    <li data-t="p2"></li>
+    <li data-t="p3"></li>
+    <li data-t="p4"></li>
+    <li data-t="p5"></li>
+  </ol>
+</section>
+
+<section>
+  <div class="sec-label"><span class="meta" data-t="pcMeta"></span><h2 class="h-sec" data-t="pcTit"></h2></div>
+  <p class="lede" data-t="pc"></p>
+</section>
+
+
+<footer class="foot"><span>MNSA · BDFD</span><a href="/#trabalhos" data-t="voltar"></a></footer>
+
+</main>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<script>
+// Textos em português e inglês. data-t="chave" troca o conteúdo (pode ter <code> e <b>); data-ph troca o placeholder
+const T = {
+  pt: {
+    voltar: 'VOLTAR AOS PROJETOS', kicker: 'Ferramenta',
+    lede: 'Sobe os 143 emojis do xadrez de BDFD no seu bot e devolve a linha pronta pra colar na variável <code>ChessEmojis</code>. Funciona no celular.<br><br>Os emojis são opcionais: sem eles o xadrez funciona numa versão limitada, com as peças e as casas em emojis padrão do Discord.',
+    rotulo: 'Token do bot', ph: 'Cole aqui o token do bot do BDFD', botao: 'Subir emojis',
+    saida: 'Valor da ChessEmojis', copiar: 'Copiar', copiado: 'Copiado ✓',
+    aviso: '<b>O token é a senha do seu bot.</b> Ele passa pelo nosso servidor só durante o upload: não é salvo nem registrado em lugar nenhum. Mesmo assim, <b>gere um token novo depois</b> (passo 05). Nunca cole aqui o token da sua conta do Discord, só o do bot.',
+    passosMeta: 'Passo a passo', passosTit: 'Do token ao tabuleiro.',
+    p1: 'Abra o <code>discord.com/developers/applications</code>, escolha o app do bot que roda no BDFD, vá em <b>Bot</b> e aperte <b>Reset Token</b>. Copie o token.',
+    p2: 'Cole o token acima e aperte <b>Subir emojis</b>. Os emojis viram emojis do próprio app (até 2000 por bot) e funcionam em qualquer servidor. Eles sobem com o nome <code>mnsa_1k</code>, <code>mnsa_vc</code>…, pra não misturar com outros emojis do seu bot. Se você já subiu antes, os que existem são reaproveitados.',
+    p3: 'Copie a linha que aparecer.',
+    p4: 'No app do BDFD, abra <b>Variables</b>, crie (ou edite) a variável <code>ChessEmojis</code> e cole a linha como valor padrão.',
+    p5: 'Volte no Developer Portal e aperte <b>Reset Token</b> de novo. Cole esse token novo no BDFD (campo do token do bot), senão o bot para.',
+    pcMeta: 'No computador', pcTit: 'Prefere não colar o token aqui?',
+    pc: 'Rode o script do repositório no seu computador: <code>node tools/upload-emojis.mjs SEU_TOKEN</code>. Ele faz o mesmo e o token não sai da sua máquina.',
+    vazio: 'Cole o token do bot primeiro.', formato: 'Isso não parece um token de bot (são três partes separadas por ponto).',
+    conectando: 'Conectando ao Discord…', inicio: (e) => `Bot ${e.bot}: ${e.total - e.faltam} já existiam, subindo ${e.faltam}…`,
+    subiu: (e) => `Subiu ${e.nome} (${e.feitos}/143)`, pronto: 'Pronto! Copie a linha abaixo e siga o passo 04.',
+    erro: { token: 'O Discord recusou o token. Confira se copiou inteiro e se é o token do bot.', limite: 'Muitas tentativas desse aparelho. Espere 10 minutos.', ocupado: 'Tem gente usando agora. Tente de novo em um minuto.', discord: 'O Discord deu erro. Pode ser o limite de 2000 emojis do app ou o Discord fora do ar.', falhou: 'Algo deu errado no servidor. Tente de novo.', rede: 'Sem conexão com o servidor.' }
+  },
+  en: {
+    voltar: 'BACK TO PROJECTS', kicker: 'Tool',
+    lede: 'Uploads the 143 BDFD chess emojis to your bot and gives you the line to paste into the <code>ChessEmojis</code> variable. Works on your phone.<br><br>The emojis are optional: without them the chess game works in a limited version, with the pieces and squares drawn in standard Discord emojis.',
+    rotulo: 'Bot token', ph: 'Paste your BDFD bot token here', botao: 'Upload emojis',
+    saida: 'ChessEmojis value', copiar: 'Copy', copiado: 'Copied ✓',
+    aviso: '<b>The token is your bot\'s password.</b> It goes through our server only during the upload: it is not saved or logged anywhere. Even so, <b>generate a new token afterwards</b> (step 05). Never paste your Discord account token here, only the bot token.',
+    passosMeta: 'Step by step', passosTit: 'From token to board.',
+    p1: 'Open <code>discord.com/developers/applications</code>, pick the app of the bot that runs on BDFD, go to <b>Bot</b> and press <b>Reset Token</b>. Copy the token.',
+    p2: 'Paste the token above and press <b>Upload emojis</b>. They become emojis of the app itself (up to 2000 per bot) and work in any server. They are named <code>mnsa_1k</code>, <code>mnsa_vc</code>… so they don\'t mix with your other emojis. If you uploaded before, the existing ones are reused.',
+    p3: 'Copy the line that shows up.',
+    p4: 'In the BDFD app, open <b>Variables</b>, create (or edit) the <code>ChessEmojis</code> variable and paste the line as its default value.',
+    p5: 'Go back to the Developer Portal and press <b>Reset Token</b> again. Paste the new token into BDFD (the bot token field), or the bot stops.',
+    pcMeta: 'On a computer', pcTit: 'Rather not paste your token here?',
+    pc: 'Run the repository script on your computer: <code>node tools/upload-emojis.mjs YOUR_TOKEN</code>. It does the same and the token never leaves your machine.',
+    vazio: 'Paste the bot token first.', formato: 'That doesn\'t look like a bot token (three parts separated by dots).',
+    conectando: 'Connecting to Discord…', inicio: (e) => `Bot ${e.bot}: ${e.total - e.faltam} already there, uploading ${e.faltam}…`,
+    subiu: (e) => `Uploaded ${e.nome} (${e.feitos}/143)`, pronto: 'Done! Copy the line below and follow step 04.',
+    erro: { token: 'Discord rejected the token. Check you copied all of it and that it is the bot token.', limite: 'Too many tries from this device. Wait 10 minutes.', ocupado: 'Someone is using it right now. Try again in a minute.', discord: 'Discord returned an error. It may be the app\'s 2000 emoji limit or Discord being down.', falhou: 'Something went wrong on the server. Try again.', rede: 'No connection to the server.' }
+  }
+};
+const $ = (s) => document.querySelector(s);
+let lang = (navigator.language || '').toLowerCase().startsWith('pt') ? 'pt' : 'en';
+try { lang = localStorage.getItem('lang') || lang; } catch {}
+function traduz(l) {
+  lang = T[l] ? l : 'pt'; document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+  document.querySelectorAll('[data-t]').forEach((el) => { el.innerHTML = T[lang][el.dataset.t]; });
+  document.querySelectorAll('[data-ph]').forEach((el) => { el.placeholder = T[lang][el.dataset.ph]; });
+  document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  try { localStorage.setItem('lang', lang); } catch {}
+}
+document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => traduz(b.dataset.lang)));
+traduz(lang);
+
+const status = (txt, erro) => { const s = $('#status'); s.textContent = txt; s.classList.toggle('erro', !!erro); };
+const barra = (n) => { $('.bar').hidden = false; $('.bar i').style.width = Math.round((n / 143) * 100) + '%'; };
+
+$('#subir').addEventListener('click', async () => {
+  const token = $('#token').value.trim();
+  if (!token) return status(T[lang].vazio, true);
+  if (!/^[\w-]{20,}\.[\w-]{4,}\.[\w-]{20,}$/.test(token)) return status(T[lang].formato, true);
+  $('#subir').disabled = true; $('#saida').hidden = true; barra(0); status(T[lang].conectando);
+  try {
+    const r = await fetch('/bdfd-api/chess-emojis', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); return status(T[lang].erro[e.erro] || T[lang].erro.falhou, true); }
+    // a resposta chega aos poucos: uma linha JSON por evento (inicio, subiu…, pronto ou erro)
+    const leitor = r.body.getReader(), dec = new TextDecoder(); let resto = '';
+    for (;;) {
+      const { value, done } = await leitor.read(); if (done) break;
+      resto += dec.decode(value, { stream: true });
+      const linhas = resto.split('\n'); resto = linhas.pop();
+      for (const l of linhas) {
+        if (!l.trim()) continue;
+        const e = JSON.parse(l);
+        if (e.tipo === 'inicio') { barra(e.total - e.faltam); status(T[lang].inicio(e)); }
+        else if (e.tipo === 'subiu') { barra(e.feitos); status(T[lang].subiu(e)); }
+        else if (e.tipo === 'pronto') { barra(143); status(T[lang].pronto); $('#valor').value = e.valor; $('#saida').hidden = false; $('#token').value = ''; }
+        else if (e.tipo === 'erro') status((T[lang].erro[e.erro] || T[lang].erro.falhou) + (e.status ? ` [${e.status}]` : '') + (e.detalhe ? ` Discord: ${e.detalhe}` : ''), true);
+      }
+    }
+  } catch { status(T[lang].erro.rede, true); }
+  finally { $('#subir').disabled = false; }
+});
+$('#copiar').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('#valor').value); } catch { $('#valor').select(); document.execCommand('copy'); }
+  $('#copiar').textContent = T[lang].copiado; setTimeout(() => { $('#copiar').textContent = T[lang].copiar; }, 1800);
+});
+</script>
+</body>
+</html>

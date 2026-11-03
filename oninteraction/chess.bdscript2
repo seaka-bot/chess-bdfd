@@ -1,0 +1,686 @@
+$nomention
+$suppressErrors[♟️ Something went wrong with the chess. If you just installed it, check the setup (the emojis and the ChessEmojis variable): <https://mnsa.com.br/ferramentas/chess-emojis/>]
+$textSplit[$customID;-]
+$onlyIf[$splitText[1]==xz; ]
+
+
+$var[REP;$|var[code\;\]
+$|if[$|var[rN\]>=10\]$|var[rT\;$|repeatMessage[10\;$|var[rB\]\]\]$|endif
+$|if[$|var[rN\]>=100\]$|var[code\;$|repeatMessage[$|floor[$|calculate[$|var[rN\]/100\]\]\;$|repeatMessage[10\;$|var[rT\]\]\]\]$|endif
+$|if[$|modulo[$|floor[$|calculate[$|var[rN\]/10\]\]\;10\]>0\]$|var[code\;$|var[code\]$|repeatMessage[$|modulo[$|floor[$|calculate[$|var[rN\]/10\]\]\;10\]\;$|var[rT\]\]\]$|endif
+$|if[$|modulo[$|var[rN\]\;10\]>0\]$|var[code\;$|var[code\]$|repeatMessage[$|modulo[$|var[rN\]\;10\]\;$|var[rB\]\]\]$|endif]$var[REP;$replaceText[$var[REP];|;;-1]]$var[RG;$|var[rT\;$|repeatMessage[10\;$|var[rB\]\]\]$|var[rX\;$|var[rT\]\]$|if[$|var[rQ\]==100\]$|var[rX\;$|repeatMessage[10\;$|var[rT\]\]\]$|endif
+$|var[rK\;$|floor[$|calculate[$|var[rN\]/$|var[rQ\]\]\]\]
+$|var[rR\;$|calculate[$|var[rN\]-$|var[rK\]*$|var[rQ\]\]\]$|var[code\;\]
+$|if[$|floor[$|calculate[$|var[rR\]/10\]\]>0\]$|var[code\;$|repeatMessage[$|floor[$|calculate[$|var[rR\]/10\]\]\;$|var[rT\]\]\]$|endif
+$|if[$|modulo[$|var[rR\]\;10\]>0\]$|var[code\;$|var[code\]$|repeatMessage[$|modulo[$|var[rR\]\;10\]\;$|var[rB\]\]\]$|endif]$var[RG;$replaceText[$var[RG];|;;-1]]$var[LP;$|var[mm\;$|calculate[10*$|var[r\]+$|var[c\]+10\]\]
+]$var[LS;
+$|var[c\;$|calculate[$|var[c\]+1\]\]
+$|if[$|var[c\]==9\]$|var[c\;1\]$|var[r\;$|calculate[$|var[r\]+1\]\]$|endif
+$|var[i\;$|calculate[$|var[i\]+1\]\]
+]
+$var[acao;$splitText[2]]
+$var[alvo;$splitText[3]]
+$var[extra;$splitText[4]]
+$var[extra2;$splitText[5]]
+
+$var[st;]$var[tb;]$var[pgni;]$var[at;0]$var[pgnv;]$var[expirou;]
+$textSplit[$getEmbedData[$channelID;$messageID;1;description]/#~~~~~;/#]
+$textSplit[$splitText[2]);)]
+$textSplit[$splitText[1]~~~~~;~]
+$var[st;$splitText[1]]$var[tb;$replaceText[$splitText[2];,;>;-1]]$var[pgni;$splitText[3]]$var[at;$splitText[4]]$var[pgnv;$replaceText[$splitText[5];_; ;-1]]
+$if[$isNumber[$var[at]]==false]$var[at;$getTimestamp]$endif
+$textSplit[$var[st]-;-]$var[tcl;$splitText[11]]
+$if[$var[tcl]==]$var[tcl;0]$endif
+$if[$var[st]!=]$if[$var[tcl]==0]$if[$calculate[$getTimestamp-$var[at]]>900]$var[st;]$var[expirou;1]$endif$endif$endif
+$if[$var[expirou]==1]$removeButtons
+$title[♟️ Chess]
+$description[⏰ This game expired: no moves for 15 minutes.]
+$color[5865F2]
+$stop
+$endif
+$textSplit[$var[st];-]
+$var[estado;$splitText[1]]
+$if[$var[estado]==game]$elseif[$var[estado]==invite]$elseif[1>0]$ephemeral $removeButtons This game is over. $stop $endif
+$if[$getTextSplitIndex[$authorID]>1]$elseif[$var[acao]$checkUserPerms[$authorID;manageserver]==desistirtrue]$elseif[1>0]$ephemeral $removeButtons You're not in this game. $stop $endif
+$var[brancas;$splitText[2]]
+$var[pretas;$splitText[3]]
+
+
+$if[$var[estado]==invite]
+$var[og;$splitText[4]]$var[oc;$splitText[5]]$var[od;$splitText[6]]$var[ab;$splitText[7]]$var[ap;$splitText[8]]$var[ot;$splitText[9]]$if[$var[ot]==]$var[ot;0]$endif
+$if[$var[acao]==no]
+$removeButtons
+$title[♟️ Chess]
+$description[<@$authorID> declined the challenge.]
+$color[5865F2]
+$stop
+$endif
+$if[$var[acao]==cfg]$var[o$var[alvo];$calculate[1-$var[o$var[alvo]]]]$var[ab;0]$var[ap;0]$endif
+$if[$var[acao]==tmp]$var[ot;$sum[$var[ot];5]]$if[$var[ot]>600]$var[ot;600]$endif$var[ab;0]$var[ap;0]$endif
+$if[$var[acao]==tmq]$var[ot;$sub[$var[ot];5]]$if[$var[ot]<0]$var[ot;0]$endif$var[ab;0]$var[ap;0]$endif
+$if[$var[acao]==cor]$var[x;$var[brancas]]$var[brancas;$var[pretas]]$var[pretas;$var[x]]$var[ab;0]$var[ap;0]$endif
+$if[$var[acao]==pgn]
+$newModal[xz-pgnm;Import PGN]
+$addTextInput[pgn;paragraph;Paste the game PGN;2;4000;yes;;1. e4 e5 2. Nf3 Nc6]
+$stop
+$endif
+$if[$var[acao]==pgnx]$var[pgni;]$var[tb;]$var[pgnv;]$var[ab;0]$var[ap;0]$endif
+$var[cog;$var[og]]$var[coc;$var[oc]]$var[cod;$var[od]]
+$if[$var[acao]==ok]
+$if[$authorID==$var[brancas]]$var[ab;1]$endif
+$if[$authorID==$var[pretas]]$var[ap;1]$endif
+$endif
+$if[$var[acao]==pgnm]
+$elseif[$var[ab]$var[ap]==11]
+$if[$var[pgni]==]
+$var[st;game-$var[brancas]-$var[pretas]-1-abcd-0-0-$var[og]-$var[oc]-$var[od]-$calculate[$var[ot]*60]-$calculate[$var[ot]*60]]
+$var[tb;2r-2n-2b-2q-2k-2b-2n-2r-2p-2p-2p-2p-2p-2p-2p-2p-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-1p:71>61-1p:72>62-1p:73>63-1p:74>64-1p:75>65-1p:76>66-1p:77>67-1p:78>68-1r-1n:71>73-1b-1q-1k-1b-1n:76>78-1r]$var[pgni;]$var[pgnv;]$var[at;$getTimestamp]$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
+$elseif[1>0]
+$textSplit[$var[pgni];-]
+$var[st;game-$var[brancas]-$var[pretas]-$splitText[1]-$splitText[2]-$splitText[3]-$splitText[4]-$var[og]-$var[oc]-$var[od]-$calculate[$var[ot]*60]-$calculate[$var[ot]*60]]
+$var[pgni;]$var[at;$getTimestamp]$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
+$endif
+$var[acao;inicio]
+$elseif[1>0]
+$var[st;invite-$var[brancas]-$var[pretas]-$var[og]-$var[oc]-$var[od]-$var[ab]-$var[ap]-$var[ot]]$var[at;$getTimestamp]$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
+
+$removeButtons
+$var[sim1;✅ on]$var[sim0;❌ off]$var[ok1;✅]$var[ok0;⏳]
+$var[otxt;off]$if[$var[ot]>0]$var[otxt;$var[ot] min each, +2 s per move]$endif
+$var[dica;]$if[$getVar[ChessEmojis]==]$var[dica;
+
+💡 This board uses standard emojis. For the real chess board, install the chess emojis: <https://mnsa.com.br/ferramentas/chess-emojis/>]$endif
+$var[pinfo;Starts from the initial position.]
+$if[$var[pgni]!=]$var[cvez1;white]$var[cvez2;black]$textSplit[$var[pgni];-]$var[pinfo;📋 Starts from the imported PGN: $splitText[5] half-moves, $var[cvez$splitText[1]] to move.]$endif
+$title[♟️ Chess challenge]
+$var[quem;⚪ <@$var[brancas]> plays white
+⚫ <@$var[pretas]> plays black]
+$var[aceite;$var[ok$var[ab]] <@$var[brancas]>   $var[ok$var[ap]] <@$var[pretas]>]
+$if[$var[brancas]==$var[pretas]]$var[quem;<@$var[brancas]> plays both white and black]$var[aceite;$var[ok$var[ab]] <@$var[brancas]>]$endif
+$description[$var[quem]
+
+**Settings**
+Board coordinates: $var[sim$var[og]]
+Blue outline on the selected piece: $var[sim$var[oc]]
+Legal moves on the board: $var[sim$var[od]]
+Clock: $var[otxt]
+
+$var[pinfo]
+
+**Accepted:** $var[aceite]
+Changing a setting or swapping colors asks both players to accept again.$var[dica][⠀\](https://discord.com/#$var[dados])]
+$color[5865F2]
+$var[es;secondary]$if[$var[og]==1]$var[es;success]$endif$addButton[no;xz-cfg-g;Coordinates;$var[es];no]
+$var[es;secondary]$if[$var[oc]==1]$var[es;success]$endif$addButton[no;xz-cfg-c;Outline;$var[es];no]
+$var[es;secondary]$if[$var[od]==1]$var[es;success]$endif$addButton[no;xz-cfg-d;Moves;$var[es];no]
+$var[es;secondary]$if[$var[ot]>0]$var[es;success]$endif$addButton[no;xz-tmp;+5 min;$var[es];no;⏱️]
+$addButton[no;xz-tmq;-5 min;secondary;no]
+$addButton[yes;xz-cor;Swap colors;secondary;no;🔄]
+$addButton[no;xz-pgn;Import PGN;secondary;no;📋]
+$if[$var[pgni]!=]$addButton[no;xz-pgnx;Clear PGN;secondary;no]$endif
+$addButton[yes;xz-ok;Accept;success;no;✅]
+$addButton[no;xz-no;Decline;danger;no]
+$stop
+$endif
+$textSplit[$var[st];-]
+$endif
+$var[brancas;$splitText[2]]
+$var[pretas;$splitText[3]]
+$var[vez;$splitText[4]]
+$var[cr;$splitText[5]]
+$var[ep;$splitText[6]]
+$var[xeque;]
+$if[$splitText[7]>0]$var[xeque;**Check!** ]$endif
+$var[og;$splitText[8]]$var[oc;$splitText[9]]$var[od;$splitText[10]]
+$if[$var[og]==]$var[og;1]$endif$if[$var[oc]==]$var[oc;1]$endif$if[$var[od]==]$var[od;1]$endif
+$var[t1;$splitText[11]]$var[t2;$splitText[12]]$if[$var[t1]==]$var[t1;0]$endif$if[$var[t2]==]$var[t2;0]$endif
+$var[jogador;$splitText[$sum[$var[vez];1]]]
+$if[$var[estado]==game]$if[$var[t$var[vez]]>0]$if[$calculate[$getTimestamp-$var[at]]>$var[t$var[vez]]]
+$var[outro;$var[brancas]]$if[$var[vez]==1]$var[outro;$var[pretas]]$endif
+$var[pgnt;]
+$if[$var[pgnv]!=]
+$textSplit[$var[pgnv]; ]
+$var[j;1]
+$var[rN;$getTextSplitLength]$var[rB;$|if[$|modulo[$|var[j\]\;2\]==1\]$|var[pgnt\;$|var[pgnt\]$|calculate[($|var[j\]+1)/2\]. \]$|endif$|var[pgnt\;$|var[pgnt\]$|splitText[$|var[j\]\] \]$|var[j\;$|calculate[$|var[j\]+1\]\]]$var[rQ;100]$eval[$replaceText[$|c[mnsa 1\];|;;-1]$var[RG]]$var[rX;$replaceText[$var[rX];|;;-1]]$var[code;$replaceText[$var[code];|;;-1]]
+$if[$var[rK]>=1]$eval[$replaceText[$|c[mnsa 2\]$|var[rI\;1\];|;;-1]$var[rX]]$endif$if[$var[rK]>=2]$eval[$replaceText[$|c[mnsa 3\]$|var[rI\;2\];|;;-1]$var[rX]]$endif$if[$var[rK]>=3]$eval[$replaceText[$|c[mnsa 4\]$|var[rI\;3\];|;;-1]$var[rX]]$endif$if[$var[rK]>=4]$eval[$replaceText[$|c[mnsa 5\]$|var[rI\;4\];|;;-1]$var[rX]]$endif$if[$var[rK]>=5]$eval[$replaceText[$|c[mnsa 6\]$|var[rI\;5\];|;;-1]$var[rX]]$endif
+$if[$var[rR]>0]$eval[$replaceText[$|c[mnsa 7\];|;;-1]$var[code]]$endif
+$endif
+$var[pgnbox;```
+$var[pgnt]
+```]
+$if[$var[pgnv]==]$var[pgnbox;]$endif
+$removeButtons
+$title[♟️ Chess]
+$description[⏱️ <@$var[jogador]> ran out of time. <@$var[outro]> wins!
+$var[pgnbox]]
+$color[5865F2]
+$stop
+$endif$endif$endif
+$var[tab;$var[tb]]
+$var[sel;0]$var[dp;1]$var[pag;1]$var[ultimo;]
+$var[aviso;Pick a piece.]
+
+$if[$var[acao]==desistir]
+$var[outro;$var[brancas]]
+$if[$authorID==$var[brancas]]$var[outro;$var[pretas]]$endif
+$removeButtons
+$title[♟️ Chess]
+$var[fim;🏳️ <@$authorID> resigned. <@$var[outro]> wins!]
+$if[$var[brancas]==$var[pretas]]$var[fim;🏳️ <@$authorID> ended the game.]$endif
+$if[$getTextSplitIndex[$authorID]<2]$var[fim;🛑 <@$authorID> (admin) ended the game.]$endif
+$var[pgnt;]
+$if[$var[pgnv]!=]
+$textSplit[$var[pgnv]; ]
+$var[j;1]
+$var[rN;$getTextSplitLength]$var[rB;$|if[$|modulo[$|var[j\]\;2\]==1\]$|var[pgnt\;$|var[pgnt\]$|calculate[($|var[j\]+1)/2\]. \]$|endif$|var[pgnt\;$|var[pgnt\]$|splitText[$|var[j\]\] \]$|var[j\;$|calculate[$|var[j\]+1\]\]]$var[rQ;100]$eval[$replaceText[$|c[mnsa 8\];|;;-1]$var[RG]]$var[rX;$replaceText[$var[rX];|;;-1]]$var[code;$replaceText[$var[code];|;;-1]]
+$if[$var[rK]>=1]$eval[$replaceText[$|c[mnsa 9\]$|var[rI\;1\];|;;-1]$var[rX]]$endif$if[$var[rK]>=2]$eval[$replaceText[$|c[mnsa 10\]$|var[rI\;2\];|;;-1]$var[rX]]$endif$if[$var[rK]>=3]$eval[$replaceText[$|c[mnsa 11\]$|var[rI\;3\];|;;-1]$var[rX]]$endif$if[$var[rK]>=4]$eval[$replaceText[$|c[mnsa 12\]$|var[rI\;4\];|;;-1]$var[rX]]$endif$if[$var[rK]>=5]$eval[$replaceText[$|c[mnsa 13\]$|var[rI\;5\];|;;-1]$var[rX]]$endif
+$if[$var[rR]>0]$eval[$replaceText[$|c[mnsa 14\];|;;-1]$var[code]]$endif
+$endif
+$var[pgnbox;```
+$var[pgnt]
+```]
+$if[$var[pgnv]==]$var[pgnbox;]$endif
+$description[$var[fim]
+$var[pgnbox]]
+$color[5865F2]
+$stop
+$endif
+
+$if[$var[acao]!=inicio]$if[$var[acao]!=pgnm]$if[$authorID==$var[jogador]]$else $ephemeral $removeButtons It's not your turn. $stop $endif$endif$endif
+$if[$var[acao]==pgnm]$var[tab;2r-2n-2b-2q-2k-2b-2n-2r-2p-2p-2p-2p-2p-2p-2p-2p-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-1p:71>61-1p:72>62-1p:73>63-1p:74>64-1p:75>65-1p:76>66-1p:77>67-1p:78>68-1r-1n:71>73-1b-1q-1k-1b-1n:76>78-1r]$endif
+
+$textSplit[$var[tab];-]
+$var[i;1]$var[r;1]$var[c;1]
+$var[code;$replaceText[$repeatMessage[2;$repeatMessage[8;$var[LP]$|var[cel\;$|splitText[$|var[i\]\]\]
+$|var[v\;$|cropText[$|var[cel\]\;2\;\]\]
+$|var[q$|var[mm\]\;$|var[v\]\]
+$|var[dm$|var[mm\]\;\]
+$|if[$|checkContains[$|var[cel\]\;:\]==true\]$|var[dm$|var[mm\]\;$|replaceText[$|var[cel\]\;$|var[v\]:\;\;1\]\]$|endif$var[LS]]];|;;-1]]
+$eval[$replaceText[$|c[mnsa 15\]$|var[k64\;1\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 16\]$|var[k64\;2\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 17\]$|var[k64\;3\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 18\]$|var[k64\;4\];|;;-1]$var[code]]
+
+
+$if[$var[acao]==pag]$var[pag;$var[alvo]]$endif
+
+$if[$var[acao]==sel]
+$var[ci;$modulo[$calculate[$var[alvo]-1];8]]
+$var[mm;$calculate[10*(($var[alvo]-1-$var[ci])/8+1)+$var[ci]+11]]
+$if[$checkContains[$var[q$var[mm]];$var[vez]]==true]$else $ephemeral $removeButtons That's not your piece. $stop $endif
+$if[$var[dm$var[mm]]!=]$else $ephemeral $removeButtons That piece has no legal moves. $stop $endif
+$var[sel;$var[alvo]]
+$if[$var[extra]!=]$var[dp;$var[extra]]$endif
+$var[pag;4]
+$if[$checkContains[$var[q$var[mm]];p]==true]$var[pag;1]$endif
+$if[$checkContains[$var[q$var[mm]];r]==true]$var[pag;2]$endif
+$if[$checkContains[$var[q$var[mm]];b;n]==true]$var[pag;3]$endif
+$endif
+
+$if[$var[acao]==mv]
+$var[s;$var[alvo]]$var[t;$var[extra]]
+$var[ls;$var[s]]$var[lt;$var[t]]
+$var[pc;$var[q$var[s]]]
+$if[$checkContains[>$var[dm$var[s]]>;>$var[t]>]==true]$else $ephemeral $removeButtons That move is no longer valid. $stop $endif
+$var[f1;A]$var[f2;B]$var[f3;C]$var[f4;D]$var[f5;E]$var[f6;F]$var[f7;G]$var[f8;H]
+$var[sc;$modulo[$var[s];10]]$var[tcl;$modulo[$var[t];10]]
+$var[prom;]$var[okp;]
+$if[$checkContains[$var[pc];p]==true]$if[$var[t]<29]$var[prom;1]$endif$if[$var[t]>90]$var[prom;1]$endif$endif
+$if[$var[prom]==1]
+$if[$charCount[$var[extra2]]==1]$if[$checkContains[qrbn;$var[extra2]]==true]$var[okp;1]$endif$endif
+$if[$var[okp]==]
+$var[acao;promo]
+$var[sel;$calculate[8*(($var[s]-$var[sc])/10-2)+$var[sc]]]
+$var[npr;$var[f$var[tcl]]$calculate[10-($var[t]-$var[tcl])/10]]
+$endif
+$endif
+$if[$var[acao]==mv]
+$var[lf1;a]$var[lf2;b]$var[lf3;c]$var[lf4;d]$var[lf5;e]$var[lf6;f]$var[lf7;g]$var[lf8;h]
+$var[tsq;$var[lf$var[tcl]]$calculate[10-($var[t]-$var[tcl])/10]]
+$var[tpc;$replaceText[$var[pc];$var[vez];;1]]
+$var[san;]
+$if[$var[tpc]==k]$if[$calculate[($var[t]-$var[s])*($var[t]-$var[s])]==4]$var[san;O-O]$if[$var[t]<$var[s]]$var[san;O-O-O]$endif$endif$endif
+$if[$var[san]==]
+$var[cap;]$if[$var[q$var[t]]!=.]$var[cap;x]$endif
+$if[$var[tpc]==p]
+$if[$var[t]==$var[ep]]$var[cap;x]$endif
+$var[san;$var[tsq]]
+$if[$var[cap]==x]$var[san;$var[lf$var[sc]]x$var[tsq]]$endif
+$if[$var[prom]==1]$var[san;$var[san]=$toUppercase[$var[extra2]]]$endif
+$elseif[1>0]
+$var[no;0]$var[mf;]$var[mr;]
+$var[i;1]$var[r;1]$var[c;1]
+$var[code;$replaceText[$repeatMessage[2;$repeatMessage[8;$var[LP]$|if[$|var[q$|var[mm\]\]==$|var[pc\]\]$|if[$|var[mm\]!=$|var[s\]\]$|if[$|checkContains[>$|var[dm$|var[mm\]\]>\;>$|var[t\]>\]==true\]$|var[no\;$|sum[$|var[no\]\;1\]\]$|if[$|modulo[$|var[mm\]\;10\]==$|var[sc\]\]$|var[mf\;1\]$|endif$|if[$|calculate[$|var[mm\]-$|modulo[$|var[mm\]\;10\]\]==$|calculate[$|var[s\]-$|var[sc\]\]\]$|var[mr\;1\]$|endif$|endif$|endif$|endif$var[LS]]];|;;-1]]
+$eval[$replaceText[$|c[mnsa 19\]$|var[k64\;1\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 20\]$|var[k64\;2\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 21\]$|var[k64\;3\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 22\]$|var[k64\;4\];|;;-1]$var[code]]
+$var[dis;]
+$if[$var[no]>0]$if[$var[mf]==]$var[dis;$var[lf$var[sc]]]$elseif[$var[mr]==]$var[dis;$calculate[10-($var[s]-$var[sc])/10]]$elseif[1>0]$var[dis;$var[lf$var[sc]]$calculate[10-($var[s]-$var[sc])/10]]$endif$endif
+$var[san;$toUppercase[$var[tpc]]$var[dis]$var[cap]$var[tsq]]
+$endif
+$endif
+$var[comeu;]$if[$var[q$var[t]]!=.]$var[comeu;, capturing]$endif
+$var[q$var[t];$var[pc]]$var[q$var[s];.]
+$if[$checkContains[$var[pc];p]==true]
+$if[$var[t]==$var[ep]]
+$var[epc;$sum[$var[ep];10]]$if[$var[vez]==2]$var[epc;$sum[$var[ep];-10]]$endif
+$var[q$var[epc];.]$var[comeu;, capturing en passant]
+$endif
+$if[$var[prom]==1]$var[nomepq;queen]$var[nomepr;rook]$var[nomepb;bishop]$var[nomepn;knight]$var[q$var[t];$var[vez]$var[extra2]]$var[comeu;$var[comeu], promoting to $var[nomep$var[extra2]]]$endif
+$endif
+$if[$var[pc]==1k]$if[$var[s]==95]
+$if[$var[t]==97]$var[q98;.]$var[q96;1r]$var[comeu; (castling)]$endif
+$if[$var[t]==93]$var[q91;.]$var[q94;1r]$var[comeu; (long castling)]$endif
+$endif$endif
+$if[$var[pc]==2k]$if[$var[s]==25]
+$if[$var[t]==27]$var[q28;.]$var[q26;2r]$var[comeu; (castling)]$endif
+$if[$var[t]==23]$var[q21;.]$var[q24;2r]$var[comeu; (long castling)]$endif
+$endif$endif
+$var[ep;0]
+$if[$checkContains[$var[pc];p]==true]$if[$calculate[($var[t]-$var[s])*($var[t]-$var[s])]==400]$var[ep;$calculate[($var[s]+$var[t])/2]]$endif$endif
+$var[nc;]
+$if[$checkContains[$var[cr];a]==true]$if[$var[q95]$var[q98]==1k1r]$var[nc;$var[nc]a]$endif$endif
+$if[$checkContains[$var[cr];b]==true]$if[$var[q95]$var[q91]==1k1r]$var[nc;$var[nc]b]$endif$endif
+$if[$checkContains[$var[cr];c]==true]$if[$var[q25]$var[q28]==2k2r]$var[nc;$var[nc]c]$endif$endif
+$if[$checkContains[$var[cr];d]==true]$if[$var[q25]$var[q21]==2k2r]$var[nc;$var[nc]d]$endif$endif
+$if[$var[nc]==]$var[nc;x]$endif
+$var[cr;$var[nc]]
+$var[a;$var[vez]]
+$if[$var[t$var[a]]>0]$var[t$var[a];$calculate[$var[t$var[a]]-($getTimestamp-$var[at])+2]]$endif
+$var[vez;1]$if[$var[a]==1]$var[vez;2]$endif
+$var[e;$var[vez]]
+$var[epc;$sum[$var[ep];10]]$if[$var[vez]==2]$var[epc;$sum[$var[ep];-10]]$endif
+$var[calc;1]
+$endif
+$endif
+
+$if[$var[acao]==pgnm]
+$textSplit[$input[pgn];
+]
+$var[j;1]$var[corpo;]
+$var[rN;$getTextSplitLength]$var[rB;$|var[lin\;$|splitText[$|var[j\]\]\]$|var[j\;$|calculate[$|var[j\]+1\]\]$|if[$|checkContains[$|var[lin\]\;"\]==false\]$|var[corpo\;$|var[corpo\] $|var[lin\]\]$|endif]$eval[$replaceText[$|c[mnsa 23\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 24\]$var[code];|;;-1]]$endif
+$var[corpo;$replaceText[$replaceText[$replaceText[$var[corpo];.;. ];!;];?;]]
+$textSplit[$var[corpo]; ]
+$var[j;1]$var[np;0]$var[sanl;]
+$var[rN;$getTextSplitLength]$var[rB;$|var[w\;$|splitText[$|var[j\]\]\]$|var[j\;$|calculate[$|var[j\]+1\]\]$|if[$|var[w\]!=\]$|if[$|checkContains[$|var[w\]\;.\;*\;1-0\;0-1\;1/2\]==false\]$|var[np\;$|sum[$|var[np\]\;1\]\]$|var[pk$|var[np\]\;$|var[w\]\]$|if[$|var[sanl\]==\]$|var[sanl\;$|var[w\]\]$|elseif[1>0\]$|var[sanl\;$|var[sanl\] $|var[w\]\]$|endif$|endif$|endif]$var[rQ;100]$eval[$replaceText[$|c[mnsa 25\];|;;-1]$var[RG]]$var[rX;$replaceText[$var[rX];|;;-1]]$var[code;$replaceText[$var[code];|;;-1]]
+$if[$var[rK]>=1]$eval[$replaceText[$|c[mnsa 26\]$|var[rI\;1\];|;;-1]$var[rX]]$endif$if[$var[rK]>=2]$eval[$replaceText[$|c[mnsa 27\]$|var[rI\;2\];|;;-1]$var[rX]]$endif$if[$var[rK]>=3]$eval[$replaceText[$|c[mnsa 28\]$|var[rI\;3\];|;;-1]$var[rX]]$endif$if[$var[rK]>=4]$eval[$replaceText[$|c[mnsa 29\]$|var[rI\;4\];|;;-1]$var[rX]]$endif$if[$var[rK]>=5]$eval[$replaceText[$|c[mnsa 30\]$|var[rI\;5\];|;;-1]$var[rX]]$endif
+$if[$var[rR]>0]$eval[$replaceText[$|c[mnsa 31\];|;;-1]$var[code]]$endif
+$if[$var[np]==0]$ephemeral I couldn't find any moves in that PGN. $stop $endif
+$var[lf1;a]$var[lf2;b]$var[lf3;c]$var[lf4;d]$var[lf5;e]$var[lf6;f]$var[lf7;g]$var[lf8;h]
+$var[IS;$|if[$|var[f\]==\]$|var[u\;$|sum[$|var[u\]\;$|var[d\]\]\]$|var[x\;$|var[q$|var[u\]\]\]$|if[$|var[x\]!=.\]$|var[f\;1\]$|if[$|var[x\]==$|var[me\]\]$|var[nc\;$|sum[$|var[nc\]\;1\]\]$|var[cd$|var[nc\]\;$|var[u\]\]$|endif$|endif$|endif]
+$var[IHv;$|if[$|var[erro\]==\]$|var[n2\;$|sum[$|var[n2\]\;1\]\]$|var[tp\;$|var[ptp$|var[n2\]\]\]$|var[tg\;$|var[ptg$|var[n2\]\]\]$|var[pr\;$|var[ppr$|var[n2\]\]\]$|var[df\;$|var[pdf$|var[n2\]\]\]$|var[dr\;$|var[pdr$|var[n2\]\]\]$|var[me\;$|var[vz\]$|var[tp\]\]$|var[nc\;0\]$|var[NF\;10\]$|if[$|var[vz\]==2\]$|var[NF\;-10\]$|endif]
+$var[IJ;$|var[u\;$|sum[$|var[tg\]\;$|var[o\]\]\]$|if[$|var[q$|var[u\]\]==$|var[me\]\]$|var[nc\;$|sum[$|var[nc\]\;1\]\]$|var[cd$|var[nc\]\;$|var[u\]\]$|endif]
+$var[Ip;$var[IHv]$|if[$|var[df\]==0\]$|var[u\;$|sum[$|var[tg\]\;$|var[NF\]\]\]$|if[$|var[q$|var[u\]\]==$|var[me\]\]$|var[nc\;$|sum[$|var[nc\]\;1\]\]$|var[cd$|var[nc\]\;$|var[u\]\]$|elseif[$|var[q$|var[u\]\]==.\]$|var[u\;$|sum[$|var[u\]\;$|var[NF\]\]\]$|if[$|var[q$|var[u\]\]==$|var[me\]\]$|var[nc\;$|sum[$|var[nc\]\;1\]\]$|var[cd$|var[nc\]\;$|var[u\]\]$|endif$|endif$|elseif[1>0\]$|var[u\;$|sub[$|sum[$|var[tg\]\;$|var[NF\]\;$|var[df\]\]\;$|modulo[$|var[tg\]\;10\]\]\]$|if[$|var[q$|var[u\]\]==$|var[me\]\]$|var[nc\;$|sum[$|var[nc\]\;1\]\]$|var[cd$|var[nc\]\;$|var[u\]\]$|endif$|endif$|var[ss\;\]]
+$var[In;$var[IHv]$|var[o\;-21\]$var[IJ]$|var[o\;-19\]$var[IJ]$|var[o\;-12\]$var[IJ]$|var[o\;-8\]$var[IJ]$|var[o\;8\]$var[IJ]$|var[o\;12\]$var[IJ]$|var[o\;19\]$var[IJ]$|var[o\;21\]$var[IJ]$|var[ss\;\]]
+$var[Ik;$var[IHv]$|var[o\;-10\]$var[IJ]$|var[o\;10\]$var[IJ]$|var[o\;-1\]$var[IJ]$|var[o\;1\]$var[IJ]$|var[o\;-11\]$var[IJ]$|var[o\;-9\]$var[IJ]$|var[o\;9\]$var[IJ]$|var[o\;11\]$var[IJ]$|var[ss\;\]]
+$var[Io;$var[IHv]$|var[s1\;95\]$|if[$|var[vz\]==2\]$|var[s1\;25\]$|endif$|if[$|var[tg\]==s\]$|var[tg\;$|sum[$|var[s1\]\;2\]\]$|elseif[1>0\]$|var[tg\;$|sum[$|var[s1\]\;-2\]\]$|endif$|var[u\;$|var[s1\]\]$|if[$|var[q$|var[u\]\]==$|var[vz\]k\]$|var[nc\;$|sum[$|var[nc\]\;1\]\]$|var[cd$|var[nc\]\;$|var[u\]\]$|endif$|var[ss\;\]]
+$var[Ir;$var[IHv]$|var[d\;-10\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;10\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;-1\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;1\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[ss\;\]]
+$var[Ib;$var[IHv]$|var[d\;-11\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;-9\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;9\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;11\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[ss\;\]]
+$var[Iq;$var[IHv]$|var[d\;-10\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;10\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;-1\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;1\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;-11\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;-9\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;9\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[d\;11\]$|var[u\;$|var[tg\]\]$|var[f\;\]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$var[IS]$|var[ss\;\]]
+$var[IA;$|if[$|var[ss\]==\]$|if[$|var[nc\]>=1\]$|var[u\;$|var[cd1\]\]$|var[okc\;1\]$|if[$|var[df\]!=0\]$|if[$|modulo[$|var[u\]\;10\]!=$|var[df\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[dr\]!=0\]$|if[$|calculate[10-($|var[u\]-$|modulo[$|var[u\]\;10\])/10\]!=$|var[dr\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[okc\]==1\]$|var[ss\;$|var[u\]\]$|endif$|endif$|endif$|if[$|var[ss\]==\]$|if[$|var[nc\]>=2\]$|var[u\;$|var[cd2\]\]$|var[okc\;1\]$|if[$|var[df\]!=0\]$|if[$|modulo[$|var[u\]\;10\]!=$|var[df\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[dr\]!=0\]$|if[$|calculate[10-($|var[u\]-$|modulo[$|var[u\]\;10\])/10\]!=$|var[dr\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[okc\]==1\]$|var[ss\;$|var[u\]\]$|endif$|endif$|endif$|if[$|var[ss\]==\]$|if[$|var[nc\]>=3\]$|var[u\;$|var[cd3\]\]$|var[okc\;1\]$|if[$|var[df\]!=0\]$|if[$|modulo[$|var[u\]\;10\]!=$|var[df\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[dr\]!=0\]$|if[$|calculate[10-($|var[u\]-$|modulo[$|var[u\]\;10\])/10\]!=$|var[dr\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[okc\]==1\]$|var[ss\;$|var[u\]\]$|endif$|endif$|endif$|if[$|var[ss\]==\]$|if[$|var[nc\]>=4\]$|var[u\;$|var[cd4\]\]$|var[okc\;1\]$|if[$|var[df\]!=0\]$|if[$|modulo[$|var[u\]\;10\]!=$|var[df\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[dr\]!=0\]$|if[$|calculate[10-($|var[u\]-$|modulo[$|var[u\]\;10\])/10\]!=$|var[dr\]\]$|var[okc\;\]$|endif$|endif$|if[$|var[okc\]==1\]$|var[ss\;$|var[u\]\]$|endif$|endif$|endif$|if[$|var[ss\]==\]$|var[erro\;$|var[n2\]\]$|endif
+$|if[$|var[erro\]==\]
+$|var[s\;$|var[ss\]\]$|var[t\;$|var[tg\]\]$|var[pc\;$|var[q$|var[s\]\]\]
+$|var[q$|var[t\]\;$|var[pc\]\]$|var[q$|var[s\]\;.\]
+$|if[$|var[tp\]==p\]
+$|if[$|var[t\]==$|var[ep\]\]$|var[q$|sum[$|var[t\]\;$|var[NF\]\]\;.\]$|endif
+$|if[$|var[t\]<29\]$|var[q$|var[t\]\;1$|var[pr\]\]$|endif
+$|if[$|var[t\]>90\]$|var[q$|var[t\]\;2$|var[pr\]\]$|endif
+$|endif
+$|if[$|var[pc\]==1k\]$|if[$|var[s\]==95\]$|if[$|var[t\]==97\]$|var[q98\;.\]$|var[q96\;1r\]$|endif$|if[$|var[t\]==93\]$|var[q91\;.\]$|var[q94\;1r\]$|endif$|endif$|endif
+$|if[$|var[pc\]==2k\]$|if[$|var[s\]==25\]$|if[$|var[t\]==27\]$|var[q28\;.\]$|var[q26\;2r\]$|endif$|if[$|var[t\]==23\]$|var[q21\;.\]$|var[q24\;2r\]$|endif$|endif$|endif
+$|var[ep\;0\]
+$|if[$|var[tp\]==p\]$|if[$|calculate[($|var[t\]-$|var[s\])*($|var[t\]-$|var[s\])\]==400\]$|var[ep\;$|calculate[($|var[s\]+$|var[t\])/2\]\]$|endif$|endif
+$|var[ncr\;\]
+$|if[$|checkContains[$|var[cr\]\;a\]==true\]$|if[$|var[q95\]$|var[q98\]==1k1r\]$|var[ncr\;$|var[ncr\]a\]$|endif$|endif
+$|if[$|checkContains[$|var[cr\]\;b\]==true\]$|if[$|var[q95\]$|var[q91\]==1k1r\]$|var[ncr\;$|var[ncr\]b\]$|endif$|endif
+$|if[$|checkContains[$|var[cr\]\;c\]==true\]$|if[$|var[q25\]$|var[q28\]==2k2r\]$|var[ncr\;$|var[ncr\]c\]$|endif$|endif
+$|if[$|checkContains[$|var[cr\]\;d\]==true\]$|if[$|var[q25\]$|var[q21\]==2k2r\]$|var[ncr\;$|var[ncr\]d\]$|endif$|endif
+$|if[$|var[ncr\]==\]$|var[ncr\;x\]$|endif
+$|var[cr\;$|var[ncr\]\]
+$|if[$|var[vz\]==1\]$|var[vz\;2\]$|elseif[1>0\]$|var[vz\;1\]$|endif
+$|endif
+$|endif
+]
+$var[Ip;$replaceText[$var[Ip];|;;-1]]$var[In;$replaceText[$var[In];|;;-1]]$var[Ik;$replaceText[$var[Ik];|;;-1]]$var[Io;$replaceText[$var[Io];|;;-1]]$var[Ir;$replaceText[$var[Ir];|;;-1]]$var[Ib;$replaceText[$var[Ib];|;;-1]]$var[Iq;$replaceText[$var[Iq];|;;-1]]$var[IA;$replaceText[$var[IA];|;;-1]]
+$var[k;0]$var[ki;1]$var[imp1;]
+$if[$charCount[$var[sanl]]>1000]$ephemeral That PGN is too long to import: the limit is 140 half-moves. $stop $endif
+$if[$var[np]>140]$ephemeral That PGN is too long to import: the limit is 140 half-moves. $stop $endif
+$var[rN;$var[np]]$var[rB;$|var[k\;$|sum[$|var[k\]\;1\]\]$|var[w\;$|var[pk$|var[k\]\]\]
+$|var[w\;$|replaceText[$|replaceText[$|replaceText[$|replaceText[$|var[w\]\;+\;\]\;#\;\]\;x\;\]\;=\;\]\]
+$|var[tp\;p\]$|var[pr\;q\]$|var[df\;0\]$|var[dr\;0\]$|var[tg\;0\]
+$|if[$|checkContains[$|var[w\]\;O-O-O\;0-0-0\]==true\]$|var[tp\;o\]$|var[tg\;l\]
+$|elseif[$|checkContains[$|var[w\]\;O-O\;0-0\]==true\]$|var[tp\;o\]$|var[tg\;s\]
+$|elseif[1>0\]
+$|var[w\;$|var[w\]~\]
+$|if[$|checkContains[$|var[w\]\;Q~\]==true\]$|var[pr\;q\]$|var[w\;$|replaceText[$|var[w\]\;Q~\;~\]\]$|endif$|if[$|checkContains[$|var[w\]\;R~\]==true\]$|var[pr\;r\]$|var[w\;$|replaceText[$|var[w\]\;R~\;~\]\]$|endif$|if[$|checkContains[$|var[w\]\;B~\]==true\]$|var[pr\;b\]$|var[w\;$|replaceText[$|var[w\]\;B~\;~\]\]$|endif$|if[$|checkContains[$|var[w\]\;N~\]==true\]$|var[pr\;n\]$|var[w\;$|replaceText[$|var[w\]\;N~\;~\]\]$|endif
+$|var[rk\;0\]$|if[$|checkContains[$|var[w\]\;1~\]==true\]$|var[rk\;1\]$|endif$|if[$|checkContains[$|var[w\]\;2~\]==true\]$|var[rk\;2\]$|endif$|if[$|checkContains[$|var[w\]\;3~\]==true\]$|var[rk\;3\]$|endif$|if[$|checkContains[$|var[w\]\;4~\]==true\]$|var[rk\;4\]$|endif$|if[$|checkContains[$|var[w\]\;5~\]==true\]$|var[rk\;5\]$|endif$|if[$|checkContains[$|var[w\]\;6~\]==true\]$|var[rk\;6\]$|endif$|if[$|checkContains[$|var[w\]\;7~\]==true\]$|var[rk\;7\]$|endif$|if[$|checkContains[$|var[w\]\;8~\]==true\]$|var[rk\;8\]$|endif
+$|var[w\;$|replaceText[$|var[w\]\;$|var[rk\]~\;~\]\]
+$|var[fc\;0\]$|if[$|checkContains[$|var[w\]\;a~\]==true\]$|var[fc\;1\]$|endif$|if[$|checkContains[$|var[w\]\;b~\]==true\]$|var[fc\;2\]$|endif$|if[$|checkContains[$|var[w\]\;c~\]==true\]$|var[fc\;3\]$|endif$|if[$|checkContains[$|var[w\]\;d~\]==true\]$|var[fc\;4\]$|endif$|if[$|checkContains[$|var[w\]\;e~\]==true\]$|var[fc\;5\]$|endif$|if[$|checkContains[$|var[w\]\;f~\]==true\]$|var[fc\;6\]$|endif$|if[$|checkContains[$|var[w\]\;g~\]==true\]$|var[fc\;7\]$|endif$|if[$|checkContains[$|var[w\]\;h~\]==true\]$|var[fc\;8\]$|endif
+$|var[w\;$|replaceText[$|var[w\]\;$|var[lf$|var[fc\]\]~\;\]\]
+$|var[tg\;$|calculate[10*(10-$|var[rk\])+$|var[fc\]\]\]
+$|var[c1\;$|cropText[$|var[w\]\;1\;\]\]
+$|if[$|var[c1\]!=\]$|if[$|charCount[$|replaceText[KQRBN\;$|var[c1\]\;\]\]==4\]$|var[tp\;$|toLowercase[$|var[c1\]\]\]$|var[w\;$|replaceText[$|var[w\]\;$|var[c1\]\;\;1\]\]$|endif$|endif
+$|if[$|checkContains[$|var[w\]\;a\]==true\]$|var[df\;1\]$|endif$|if[$|checkContains[$|var[w\]\;b\]==true\]$|var[df\;2\]$|endif$|if[$|checkContains[$|var[w\]\;c\]==true\]$|var[df\;3\]$|endif$|if[$|checkContains[$|var[w\]\;d\]==true\]$|var[df\;4\]$|endif$|if[$|checkContains[$|var[w\]\;e\]==true\]$|var[df\;5\]$|endif$|if[$|checkContains[$|var[w\]\;f\]==true\]$|var[df\;6\]$|endif$|if[$|checkContains[$|var[w\]\;g\]==true\]$|var[df\;7\]$|endif$|if[$|checkContains[$|var[w\]\;h\]==true\]$|var[df\;8\]$|endif
+$|if[$|checkContains[$|var[w\]\;1\]==true\]$|var[dr\;1\]$|endif$|if[$|checkContains[$|var[w\]\;2\]==true\]$|var[dr\;2\]$|endif$|if[$|checkContains[$|var[w\]\;3\]==true\]$|var[dr\;3\]$|endif$|if[$|checkContains[$|var[w\]\;4\]==true\]$|var[dr\;4\]$|endif$|if[$|checkContains[$|var[w\]\;5\]==true\]$|var[dr\;5\]$|endif$|if[$|checkContains[$|var[w\]\;6\]==true\]$|var[dr\;6\]$|endif$|if[$|checkContains[$|var[w\]\;7\]==true\]$|var[dr\;7\]$|endif$|if[$|checkContains[$|var[w\]\;8\]==true\]$|var[dr\;8\]$|endif
+$|endif
+$|var[ptp$|var[k\]\;$|var[tp\]\]$|var[ptg$|var[k\]\;$|var[tg\]\]$|var[ppr$|var[k\]\;$|var[pr\]\]$|var[pdf$|var[k\]\;$|var[df\]\]$|var[pdr$|var[k\]\;$|var[dr\]\]
+$|if[$|charCount[$|var[imp$|var[ki\]\]\]>40000\]$|var[ki\;$|sum[$|var[ki\]\;1\]\]$|endif$|var[imp$|var[ki\]\;$|var[imp$|var[ki\]\]$|var[I$|var[tp\]\]$|var[IA\]\]
+]$var[rQ;10]$eval[$replaceText[$|c[mnsa 32\];|;;-1]$var[RG]]$var[rX;$replaceText[$var[rX];|;;-1]]$var[code;$replaceText[$var[code];|;;-1]]
+$if[$var[rK]>=1]$eval[$replaceText[$|c[mnsa 33\]$|var[rI\;1\];|;;-1]$var[rX]]$endif$if[$var[rK]>=2]$eval[$replaceText[$|c[mnsa 34\]$|var[rI\;2\];|;;-1]$var[rX]]$endif$if[$var[rK]>=3]$eval[$replaceText[$|c[mnsa 35\]$|var[rI\;3\];|;;-1]$var[rX]]$endif$if[$var[rK]>=4]$eval[$replaceText[$|c[mnsa 36\]$|var[rI\;4\];|;;-1]$var[rX]]$endif$if[$var[rK]>=5]$eval[$replaceText[$|c[mnsa 37\]$|var[rI\;5\];|;;-1]$var[rX]]$endif$if[$var[rK]>=6]$eval[$replaceText[$|c[mnsa 38\]$|var[rI\;6\];|;;-1]$var[rX]]$endif$if[$var[rK]>=7]$eval[$replaceText[$|c[mnsa 39\]$|var[rI\;7\];|;;-1]$var[rX]]$endif$if[$var[rK]>=8]$eval[$replaceText[$|c[mnsa 40\]$|var[rI\;8\];|;;-1]$var[rX]]$endif$if[$var[rK]>=9]$eval[$replaceText[$|c[mnsa 41\]$|var[rI\;9\];|;;-1]$var[rX]]$endif$if[$var[rK]>=10]$eval[$replaceText[$|c[mnsa 42\]$|var[rI\;10\];|;;-1]$var[rX]]$endif$if[$var[rK]>=11]$eval[$replaceText[$|c[mnsa 43\]$|var[rI\;11\];|;;-1]$var[rX]]$endif$if[$var[rK]>=12]$eval[$replaceText[$|c[mnsa 44\]$|var[rI\;12\];|;;-1]$var[rX]]$endif$if[$var[rK]>=13]$eval[$replaceText[$|c[mnsa 45\]$|var[rI\;13\];|;;-1]$var[rX]]$endif$if[$var[rK]>=14]$eval[$replaceText[$|c[mnsa 46\]$|var[rI\;14\];|;;-1]$var[rX]]$endif
+$if[$var[rR]>0]$eval[$replaceText[$|c[mnsa 47\];|;;-1]$var[code]]$endif
+$var[vz;1]$var[ep;0]$var[cr;abcd]$var[erro;]$var[n2;0]
+$if[$var[ki]>40]$ephemeral That PGN is too long to import: the limit is 140 half-moves. $stop $endif
+$eval[$replaceText[$|c[mnsa 48\];|;;-1]$var[imp1]]$if[$var[ki]>=2]$eval[$replaceText[$|c[mnsa 49\];|;;-1]$var[imp2]]$endif$if[$var[ki]>=3]$eval[$replaceText[$|c[mnsa 50\];|;;-1]$var[imp3]]$endif$if[$var[ki]>=4]$eval[$replaceText[$|c[mnsa 51\];|;;-1]$var[imp4]]$endif$if[$var[ki]>=5]$eval[$replaceText[$|c[mnsa 52\];|;;-1]$var[imp5]]$endif$if[$var[ki]>=6]$eval[$replaceText[$|c[mnsa 53\];|;;-1]$var[imp6]]$endif$if[$var[ki]>=7]$eval[$replaceText[$|c[mnsa 54\];|;;-1]$var[imp7]]$endif$if[$var[ki]>=8]$eval[$replaceText[$|c[mnsa 55\];|;;-1]$var[imp8]]$endif$if[$var[ki]>=9]$eval[$replaceText[$|c[mnsa 56\];|;;-1]$var[imp9]]$endif$if[$var[ki]>=10]$eval[$replaceText[$|c[mnsa 57\];|;;-1]$var[imp10]]$endif$if[$var[ki]>=11]$eval[$replaceText[$|c[mnsa 58\];|;;-1]$var[imp11]]$endif$if[$var[ki]>=12]$eval[$replaceText[$|c[mnsa 59\];|;;-1]$var[imp12]]$endif$if[$var[ki]>=13]$eval[$replaceText[$|c[mnsa 60\];|;;-1]$var[imp13]]$endif$if[$var[ki]>=14]$eval[$replaceText[$|c[mnsa 61\];|;;-1]$var[imp14]]$endif$if[$var[ki]>=15]$eval[$replaceText[$|c[mnsa 62\];|;;-1]$var[imp15]]$endif$if[$var[ki]>=16]$eval[$replaceText[$|c[mnsa 63\];|;;-1]$var[imp16]]$endif$if[$var[ki]>=17]$eval[$replaceText[$|c[mnsa 64\];|;;-1]$var[imp17]]$endif$if[$var[ki]>=18]$eval[$replaceText[$|c[mnsa 65\];|;;-1]$var[imp18]]$endif$if[$var[ki]>=19]$eval[$replaceText[$|c[mnsa 66\];|;;-1]$var[imp19]]$endif$if[$var[ki]>=20]$eval[$replaceText[$|c[mnsa 67\];|;;-1]$var[imp20]]$endif$if[$var[ki]>=21]$eval[$replaceText[$|c[mnsa 68\];|;;-1]$var[imp21]]$endif$if[$var[ki]>=22]$eval[$replaceText[$|c[mnsa 69\];|;;-1]$var[imp22]]$endif$if[$var[ki]>=23]$eval[$replaceText[$|c[mnsa 70\];|;;-1]$var[imp23]]$endif$if[$var[ki]>=24]$eval[$replaceText[$|c[mnsa 71\];|;;-1]$var[imp24]]$endif$if[$var[ki]>=25]$eval[$replaceText[$|c[mnsa 72\];|;;-1]$var[imp25]]$endif$if[$var[ki]>=26]$eval[$replaceText[$|c[mnsa 73\];|;;-1]$var[imp26]]$endif$if[$var[ki]>=27]$eval[$replaceText[$|c[mnsa 74\];|;;-1]$var[imp27]]$endif$if[$var[ki]>=28]$eval[$replaceText[$|c[mnsa 75\];|;;-1]$var[imp28]]$endif$if[$var[ki]>=29]$eval[$replaceText[$|c[mnsa 76\];|;;-1]$var[imp29]]$endif$if[$var[ki]>=30]$eval[$replaceText[$|c[mnsa 77\];|;;-1]$var[imp30]]$endif$if[$var[ki]>=31]$eval[$replaceText[$|c[mnsa 78\];|;;-1]$var[imp31]]$endif$if[$var[ki]>=32]$eval[$replaceText[$|c[mnsa 79\];|;;-1]$var[imp32]]$endif$if[$var[ki]>=33]$eval[$replaceText[$|c[mnsa 80\];|;;-1]$var[imp33]]$endif$if[$var[ki]>=34]$eval[$replaceText[$|c[mnsa 81\];|;;-1]$var[imp34]]$endif$if[$var[ki]>=35]$eval[$replaceText[$|c[mnsa 82\];|;;-1]$var[imp35]]$endif$if[$var[ki]>=36]$eval[$replaceText[$|c[mnsa 83\];|;;-1]$var[imp36]]$endif$if[$var[ki]>=37]$eval[$replaceText[$|c[mnsa 84\];|;;-1]$var[imp37]]$endif$if[$var[ki]>=38]$eval[$replaceText[$|c[mnsa 85\];|;;-1]$var[imp38]]$endif$if[$var[ki]>=39]$eval[$replaceText[$|c[mnsa 86\];|;;-1]$var[imp39]]$endif$if[$var[ki]>=40]$eval[$replaceText[$|c[mnsa 87\];|;;-1]$var[imp40]]$endif
+$if[$var[erro]!=]$ephemeral I couldn't read move $var[erro] of the PGN: **$var[pk$var[erro]]**. Check that the game is correct. $stop $endif
+$var[vez;$var[vz]]
+$var[a;1]$if[$var[vez]==1]$var[a;2]$endif
+$var[e;$var[vez]]
+$var[epc;$sum[$var[ep];10]]$if[$var[vez]==2]$var[epc;$sum[$var[ep];-10]]$endif
+$var[calc;1]
+$endif
+
+$if[$var[calc]==1]
+$if[$var[dfr]!=1]$defer$var[dfr;1]$endif
+
+$var[AS;$|if[$|var[f\]==\]$|var[t\;$|sum[$|var[t\]\;$|var[d\]\]\]$|var[x\;$|var[q$|var[t\]\]\]
+$|if[$|var[x\]==\]$|var[f\;1\]
+$|elseif[$|var[h\]==\]$|var[at$|var[t\]\;1\]
+$|if[$|var[x\]==$|var[e\]k\]$|var[chk\;$|sum[$|var[chk\]\;1\]\]$|var[cs\;$|var[s\]\]$|var[cd\;$|var[d\]\]
+$|elseif[$|var[x\]==.\]
+$|elseif[$|checkContains[$|var[x\]\;$|var[e\]\]==true\]$|var[h\;$|var[t\]\]
+$|elseif[1>0\]$|var[f\;1\]
+$|endif
+$|elseif[$|var[x\]==$|var[e\]k\]$|var[pin$|var[h\]\;$|var[ad\]\]$|var[f\;1\]
+$|elseif[$|var[x\]!=.\]$|var[f\;1\]
+$|endif$|endif
+]
+$var[MS;$|if[$|var[f\]==\]$|var[t\;$|sum[$|var[t\]\;$|var[d\]\]\]$|var[x\;$|var[q$|var[t\]\]\]
+$|if[$|var[x\]==.\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif
+$|elseif[$|var[x\]==\]$|var[f\;1\]
+$|elseif[$|checkContains[$|var[x\]\;$|var[a\]\]==true\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|var[f\;1\]
+$|elseif[1>0\]$|var[f\;1\]
+$|endif$|endif
+]
+$var[AJ;$|var[t\;$|sum[$|var[s\]\;$|var[o\]\]\]$|var[x\;$|var[q$|var[t\]\]\]$|if[$|var[x\]!=\]$|var[at$|var[t\]\;1\]$|if[$|var[xq\]==1\]$|if[$|var[x\]==$|var[e\]k\]$|var[chk\;$|sum[$|var[chk\]\;1\]\]$|var[cs\;$|var[s\]\]$|var[cd\;0\]$|endif$|endif$|endif]$var[NJ;$|var[t\;$|sum[$|var[s\]\;$|var[o\]\]\]$|var[x\;$|var[q$|var[t\]\]\]$|if[$|var[x\]==.\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|elseif[$|checkContains[$|var[x\]\;$|var[a\]\]==true\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|endif]$var[KJ;$|var[t\;$|sum[$|var[s\]\;$|var[o\]\]\]$|var[x\;$|var[q$|var[t\]\]\]$|if[x$|var[at$|var[t\]\]==x\]$|if[$|var[x\]==.\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|elseif[$|checkContains[$|var[x\]\;$|var[a\]\]==true\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|endif]
+$var[AOrt;$|var[d\;-10\]$|var[ad\;10\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$|var[d\;10\]$|var[ad\;10\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$|var[d\;-1\]$|var[ad\;1\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$|var[d\;1\]$|var[ad\;1\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]]
+$var[ADia;$|var[d\;-11\]$|var[ad\;11\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$|var[d\;-9\]$|var[ad\;9\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$|var[d\;9\]$|var[ad\;9\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$|var[d\;11\]$|var[ad\;11\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]$var[AS]]
+$var[MOrt;$|var[d\;-10\]$|var[ad\;10\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$|var[d\;10\]$|var[ad\;10\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$|var[d\;-1\]$|var[ad\;1\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$|var[d\;1\]$|var[ad\;1\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]]
+$var[MDia;$|var[d\;-11\]$|var[ad\;11\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$|var[d\;-9\]$|var[ad\;9\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$|var[d\;9\]$|var[ad\;9\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$|var[d\;11\]$|var[ad\;11\]$|var[t\;$|var[s\]\]$|var[f\;\]$|var[h\;\]$|if[$|var[pn\]!=\]$|if[$|var[pn\]!=$|var[ad\]\]$|var[f\;1\]$|endif$|endif$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]$var[MS]]
+$var[Ar;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$var[AOrt]]
+$var[Ab;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$var[ADia]]
+$var[Aq;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$var[AOrt]$var[ADia]]
+$var[An;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$|var[xq\;1\]$|var[o\;-21\]$var[AJ]$|var[o\;-19\]$var[AJ]$|var[o\;-12\]$var[AJ]$|var[o\;-8\]$var[AJ]$|var[o\;8\]$var[AJ]$|var[o\;12\]$var[AJ]$|var[o\;19\]$var[AJ]$|var[o\;21\]$var[AJ]]
+$var[Ak;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$|var[xq\;\]$|var[o\;-10\]$var[AJ]$|var[o\;10\]$var[AJ]$|var[o\;-1\]$var[AJ]$|var[o\;1\]$var[AJ]$|var[o\;-11\]$var[AJ]$|var[o\;-9\]$var[AJ]$|var[o\;9\]$var[AJ]$|var[o\;11\]$var[AJ]]
+$var[Ap1;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$|var[xq\;1\]$|var[o\;-11\]$var[AJ]$|var[o\;-9\]$var[AJ]]
+$var[Ap2;$|var[ia\;$|sum[$|var[ia\]\;1\]\]$|var[s\;$|var[sa$|var[ia\]\]\]$|var[xq\;1\]$|var[o\;9\]$var[AJ]$|var[o\;11\]$var[AJ]]
+$var[Mr;$|var[im\;$|sum[$|var[im\]\;1\]\]$|var[s\;$|var[sm$|var[im\]\]\]$|var[mv\;\]$|var[pn\;$|var[pin$|var[s\]\]\]$|if[$|var[chk\]<2\]$var[MOrt]$|endif$|if[$|var[mv\]!=\]$|var[nmv\;$|sum[$|var[nmv\]\;1\]\]$|var[mv\;$|replaceText[$|var[mv\]\;>\;\;1\]\]$|endif$|var[dm$|var[s\]\;$|var[mv\]\]]
+$var[Mb;$|var[im\;$|sum[$|var[im\]\;1\]\]$|var[s\;$|var[sm$|var[im\]\]\]$|var[mv\;\]$|var[pn\;$|var[pin$|var[s\]\]\]$|if[$|var[chk\]<2\]$var[MDia]$|endif$|if[$|var[mv\]!=\]$|var[nmv\;$|sum[$|var[nmv\]\;1\]\]$|var[mv\;$|replaceText[$|var[mv\]\;>\;\;1\]\]$|endif$|var[dm$|var[s\]\;$|var[mv\]\]]
+$var[Mq;$|var[im\;$|sum[$|var[im\]\;1\]\]$|var[s\;$|var[sm$|var[im\]\]\]$|var[mv\;\]$|var[pn\;$|var[pin$|var[s\]\]\]$|if[$|var[chk\]<2\]$var[MOrt]$var[MDia]$|endif$|if[$|var[mv\]!=\]$|var[nmv\;$|sum[$|var[nmv\]\;1\]\]$|var[mv\;$|replaceText[$|var[mv\]\;>\;\;1\]\]$|endif$|var[dm$|var[s\]\;$|var[mv\]\]]
+$var[Mn;$|var[im\;$|sum[$|var[im\]\;1\]\]$|var[s\;$|var[sm$|var[im\]\]\]$|var[mv\;\]$|var[pn\;$|var[pin$|var[s\]\]\]$|if[$|var[chk\]<2\]$|if[$|var[pn\]==\]$|var[o\;-21\]$var[NJ]$|var[o\;-19\]$var[NJ]$|var[o\;-12\]$var[NJ]$|var[o\;-8\]$var[NJ]$|var[o\;8\]$var[NJ]$|var[o\;12\]$var[NJ]$|var[o\;19\]$var[NJ]$|var[o\;21\]$var[NJ]$|endif$|endif$|if[$|var[mv\]!=\]$|var[nmv\;$|sum[$|var[nmv\]\;1\]\]$|var[mv\;$|replaceText[$|var[mv\]\;>\;\;1\]\]$|endif$|var[dm$|var[s\]\;$|var[mv\]\]]
+$var[Mk;$|var[im\;$|sum[$|var[im\]\;1\]\]$|var[s\;$|var[sm$|var[im\]\]\]$|var[mv\;\]$|var[pn\;$|var[pin$|var[s\]\]\]$|var[o\;-10\]$var[KJ]$|var[o\;10\]$var[KJ]$|var[o\;-1\]$var[KJ]$|var[o\;1\]$var[KJ]$|var[o\;-11\]$var[KJ]$|var[o\;-9\]$var[KJ]$|var[o\;9\]$var[KJ]$|var[o\;11\]$var[KJ]$|if[$|var[chk\]==0\]$|if[$|var[e\]==1\]$|if[$|checkContains[$|var[cr\]\;a\]==true\]$|if[$|var[q96\]$|var[q97\]==..\]$|if[x$|var[at96\]$|var[at97\]==x\]$|var[mv\;$|var[mv\]>97\]$|endif$|endif$|endif$|if[$|checkContains[$|var[cr\]\;b\]==true\]$|if[$|var[q94\]$|var[q93\]$|var[q92\]==...\]$|if[x$|var[at94\]$|var[at93\]==x\]$|var[mv\;$|var[mv\]>93\]$|endif$|endif$|endif$|elseif[1>0\]$|if[$|checkContains[$|var[cr\]\;c\]==true\]$|if[$|var[q26\]$|var[q27\]==..\]$|if[x$|var[at26\]$|var[at27\]==x\]$|var[mv\;$|var[mv\]>27\]$|endif$|endif$|endif$|if[$|checkContains[$|var[cr\]\;d\]==true\]$|if[$|var[q24\]$|var[q23\]$|var[q22\]==...\]$|if[x$|var[at24\]$|var[at23\]==x\]$|var[mv\;$|var[mv\]>23\]$|endif$|endif$|endif$|endif$|endif$|if[$|var[mv\]!=\]$|var[nmv\;$|sum[$|var[nmv\]\;1\]\]$|var[mv\;$|replaceText[$|var[mv\]\;>\;\;1\]\]$|endif$|var[dm$|var[s\]\;$|var[mv\]\]]
+$var[MpG;$|var[im\;$|sum[$|var[im\]\;1\]\]$|var[s\;$|var[sm$|var[im\]\]\]$|var[mv\;\]$|var[pn\;$|var[pin$|var[s\]\]\]$|if[$|var[chk\]<2\]$|var[ok\;\]$|if[$|var[pn\]==\]$|var[ok\;1\]$|elseif[$|var[pn\]==10\]$|var[ok\;1\]$|endif$|if[$|var[ok\]==1\]$|var[t\;$|sum[$|var[s\]\;$|var[PF\]\]\]$|if[$|var[q$|var[t\]\]==.\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|if[$|var[s\]>$|var[PL\]\]$|if[$|var[s\]<$|var[PH\]\]$|var[t\;$|sum[$|var[s\]\;$|var[P2\]\]\]$|if[$|var[q$|var[t\]\]==.\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|endif$|endif$|endif$|endif$|endif$|var[ok\;\]$|if[$|var[pn\]==\]$|var[ok\;1\]$|elseif[$|var[pn\]==$|var[PK1\]\]$|var[ok\;1\]$|endif$|if[$|var[ok\]==1\]$|var[t\;$|sum[$|var[s\]\;$|var[PC1\]\]\]$|var[x\;$|var[q$|var[t\]\]\]$|if[$|checkContains[$|var[x\]\;$|var[a\]\]==true\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|endif$|endif$|var[ok\;\]$|if[$|var[pn\]==\]$|var[ok\;1\]$|elseif[$|var[pn\]==$|var[PK2\]\]$|var[ok\;1\]$|endif$|if[$|var[ok\]==1\]$|var[t\;$|sum[$|var[s\]\;$|var[PC2\]\]\]$|var[x\;$|var[q$|var[t\]\]\]$|if[$|checkContains[$|var[x\]\;$|var[a\]\]==true\]$|if[x$|var[bk$|var[t\]\]==x$|var[bz\]\]$|var[mv\;$|var[mv\]>$|var[t\]\]$|endif$|endif$|endif$|endif$|if[$|var[mv\]!=\]$|var[nmv\;$|sum[$|var[nmv\]\;1\]\]$|var[mv\;$|replaceText[$|var[mv\]\;>\;\;1\]\]$|endif$|var[dm$|var[s\]\;$|var[mv\]\]]
+$var[Mp1;$|var[PF\;-10\]$|var[P2\;-20\]$|var[PL\;80\]$|var[PH\;89\]$|var[PC1\;-11\]$|var[PK1\;11\]$|var[PC2\;-9\]$|var[PK2\;9\]$var[MpG]]
+$var[Mp2;$|var[PF\;10\]$|var[P2\;20\]$|var[PL\;30\]$|var[PH\;39\]$|var[PC1\;9\]$|var[PK1\;9\]$|var[PC2\;11\]$|var[PK2\;11\]$var[MpG]]
+
+$var[na;0]$var[nm;0]$var[ia;0]$var[im;0]$var[ka;1]$var[km;1]$var[ca1;]$var[cm1;]$var[chk;0]$var[cs;0]$var[cd;0]$var[nmv;0]
+$var[i;1]$var[r;1]$var[c;1]
+$var[code;$replaceText[$repeatMessage[2;$repeatMessage[8;$var[LP]$|var[v\;$|var[q$|var[mm\]\]\]
+$|var[dm$|var[mm\]\;\]
+$|if[$|var[v\]!=.\]
+$|var[cor\;$|cropText[$|var[v\]\;1\;\]\]
+$|var[tp\;$|replaceText[$|var[v\]\;$|var[cor\]\;\;1\]\]
+$|if[$|var[tp\]==p\]$|var[tp\;p$|var[cor\]\]$|endif
+$|if[$|var[cor\]==$|var[a\]\]$|var[na\;$|sum[$|var[na\]\;1\]\]$|var[sa$|var[na\]\;$|var[mm\]\]$|if[$|charCount[$|var[ca$|var[ka\]\]\]>40000\]$|var[ka\;$|sum[$|var[ka\]\;1\]\]$|endif$|var[ca$|var[ka\]\;$|var[ca$|var[ka\]\]$|var[A$|var[tp\]\]\]
+$|elseif[1>0\]$|var[nm\;$|sum[$|var[nm\]\;1\]\]$|var[sm$|var[nm\]\;$|var[mm\]\]$|if[$|charCount[$|var[cm$|var[km\]\]\]>40000\]$|var[km\;$|sum[$|var[km\]\;1\]\]$|endif$|var[cm$|var[km\]\;$|var[cm$|var[km\]\]$|var[M$|var[tp\]\]\]
+$|if[$|var[v\]==$|var[e\]k\]$|var[kd\;$|var[mm\]\]$|endif
+$|endif
+$|endif$var[LS]]];|;;-1]]
+$eval[$replaceText[$|c[mnsa 88\]$|var[k64\;1\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 89\]$|var[k64\;2\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 90\]$|var[k64\;3\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 91\]$|var[k64\;4\];|;;-1]$var[code]]
+$eval[$replaceText[$|c[mnsa 92\]$var[ca1];|;;-1]]$if[$var[ka]>=2]$eval[$replaceText[$|c[mnsa 93\]$var[ca2];|;;-1]]$endif$if[$var[ka]>=3]$eval[$replaceText[$|c[mnsa 94\]$var[ca3];|;;-1]]$endif$if[$var[ka]>=4]$eval[$replaceText[$|c[mnsa 95\]$var[ca4];|;;-1]]$endif
+$var[bz;]
+$if[$var[chk]==1]$var[bz;1]$var[bk$var[cs];1]
+$if[$var[cd]!=0]$var[p;$var[cs]]$var[g;]
+$var[rN;7]$var[rB;$|if[$|var[g\]==\]$|var[p\;$|sum[$|var[p\]\;$|var[cd\]\]\]$|if[$|var[p\]==$|var[kd\]\]$|var[g\;1\]$|elseif[1>0\]$|var[bk$|var[p\]\;1\]$|endif$|endif]$eval[$replaceText[$|c[mnsa 96\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 97\]$var[code];|;;-1]]$endif
+$endif
+$endif
+$eval[$replaceText[$|c[mnsa 98\]$var[cm1];|;;-1]]$if[$var[km]>=2]$eval[$replaceText[$|c[mnsa 99\]$var[cm2];|;;-1]]$endif$if[$var[km]>=3]$eval[$replaceText[$|c[mnsa 100\]$var[cm3];|;;-1]]$endif$if[$var[km]>=4]$eval[$replaceText[$|c[mnsa 101\]$var[cm4];|;;-1]]$endif
+$if[$var[ep]!=0]
+$var[RP;$|if[$|var[f\]==\]$|var[p\;$|sum[$|var[p\]\;$|var[d\]\]\]$|var[x\;$|var[q$|var[p\]\]\]
+$|if[$|var[x\]==\]$|var[f\;1\]
+$|elseif[$|var[x\]!=.\]$|var[f\;1\]$|if[$|checkContains[$|var[x\]\;$|var[a\]\]==true\]$|if[$|checkContains[$|var[x\]\;$|var[sl\]\;q\]==true\]$|var[atk\;1\]$|endif$|endif
+$|endif$|endif
+]
+$var[RAIOS;$|var[d\;-10\]$|var[sl\;r\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;10\]$|var[sl\;r\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;-1\]$|var[sl\;r\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;1\]$|var[sl\;r\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;-11\]$|var[sl\;b\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;-9\]$|var[sl\;b\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;9\]$|var[sl\;b\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$|var[d\;11\]$|var[sl\;b\]$|var[p\;$|var[kd\]\]$|var[f\;\]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]$var[RP]]
+$var[c2;$sum[$var[epc];-1]]
+$if[$var[q$var[c2]]==$var[e]p]$if[$var[chk]<2]
+$var[okep;1]
+$if[$var[chk]==1]$if[$var[cd]==0]$if[$var[cs]!=$var[epc]]$var[okep;]$endif$endif$endif
+$if[$var[okep]==1]
+$var[q$var[c2];.]$var[q$var[epc];.]$var[q$var[ep];$var[e]p]
+$var[atk;]
+$eval[$replaceText[$|c[mnsa 102\]$var[RAIOS];|;;-1]]
+$var[q$var[c2];$var[e]p]$var[q$var[epc];$var[a]p]$var[q$var[ep];.]
+$if[$var[atk]==]
+$if[$var[dm$var[c2]]==]$var[nmv;$sum[$var[nmv];1]]$var[dm$var[c2];$var[ep]]$elseif[1>0]$var[dm$var[c2];$var[dm$var[c2]]>$var[ep]]$endif
+$endif
+$endif
+$endif$endif
+$var[c2;$sum[$var[epc];1]]
+$if[$var[q$var[c2]]==$var[e]p]$if[$var[chk]<2]
+$var[okep;1]
+$if[$var[chk]==1]$if[$var[cd]==0]$if[$var[cs]!=$var[epc]]$var[okep;]$endif$endif$endif
+$if[$var[okep]==1]
+$var[q$var[c2];.]$var[q$var[epc];.]$var[q$var[ep];$var[e]p]
+$var[atk;]
+$eval[$replaceText[$|c[mnsa 103\]$var[RAIOS];|;;-1]]
+$var[q$var[c2];$var[e]p]$var[q$var[epc];$var[a]p]$var[q$var[ep];.]
+$if[$var[atk]==]
+$if[$var[dm$var[c2]]==]$var[nmv;$sum[$var[nmv];1]]$var[dm$var[c2];$var[ep]]$elseif[1>0]$var[dm$var[c2];$var[dm$var[c2]]>$var[ep]]$endif
+$endif
+$endif
+$endif$endif
+$endif
+
+$endif
+$if[$var[acao]==mv]
+$textSplit[$var[st];-]
+$var[jogador;$splitText[$sum[$var[vez];1]]]
+$var[xeque;]
+$if[$var[chk]>0]$var[xeque;**Check!** ]$endif
+$if[$var[chk]>0]$var[san;$var[san]+]$if[$var[nmv]==0]$var[san;$replaceText[$var[san];+;#]]$endif$endif
+$if[$checkContains[$var[pgnv]; ...]==false]
+$var[pgnold;$var[pgnv]]
+$if[$var[pgnv]==]$var[pgnv;$var[san]]$elseif[1>0]$var[pgnv;$var[pgnv] $var[san]]$endif
+$if[$charCount[$var[pgnv]]>996]$var[pgnv;$var[pgnold] ...]$endif
+$endif
+$endif
+
+$if[$var[dfr]!=1]$defer$var[dfr;1]$endif
+
+$var[emjSplit;$joinSplitText[⁂]]
+$textSplit[1k 1q 1b 1n 1r 1p 2k 2q 2b 2n 2r 2p 1kc 1qc 1bc 1nc 1rc 1pc 2kc 2qc 2bc 2nc 2rc 2pc 1ke 1qe 1be 1ne 1re 1pe 2ke 2qe 2be 2ne 2re 2pe 1ksc 1qsc 1bsc 1nsc 1rsc 1psc 2ksc 2qsc 2bsc 2nsc 2rsc 2psc 1kse 1qse 1bse 1nse 1rse 1pse 2kse 2qse 2bse 2nse 2rse 2pse vc ve x0 x1 x2 x3 x4 x5 x6 x7 x8 xa xb xc xd xe xf xg xh dA1 dA2 dA3 dA4 dA5 dA6 dA7 dA8 dB1 dB2 dB3 dB4 dB5 dB6 dB7 dB8 dC1 dC2 dC3 dC4 dC5 dC6 dC7 dC8 dD1 dD2 dD3 dD4 dD5 dD6 dD7 dD8 dE1 dE2 dE3 dE4 dE5 dE6 dE7 dE8 dF1 dF2 dF3 dF4 dF5 dF6 dF7 dF8 dG1 dG2 dG3 dG4 dG5 dG6 dG7 dG8 dH1 dH2 dH3 dH4 dH5 dH6 dH7 dH8; ]$var[ek;1]
+$var[rN;$getTextSplitLength]$var[rB;$|var[en\;$|splitText[$|var[ek\]\]\]$|var[e_$|var[en\]\;:$|var[en\]:\]$|var[b_$|var[en\]\;\]$|var[ek\;$|sum[$|var[ek\]\;1\]\]]$eval[$replaceText[$|c[mnsa 104\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 105\]$var[code];|;;-1]]$endif
+$if[$getVar[ChessEmojis]==]$var[e_1k;♔]$var[e_1kc;♔]$var[e_1ke;♔]$var[e_1ksc;♔]$var[e_1kse;♔]$var[e_1q;♕]$var[e_1qc;♕]$var[e_1qe;♕]$var[e_1qsc;♕]$var[e_1qse;♕]$var[e_1r;♖]$var[e_1rc;♖]$var[e_1re;♖]$var[e_1rsc;♖]$var[e_1rse;♖]$var[e_1b;♗]$var[e_1bc;♗]$var[e_1be;♗]$var[e_1bsc;♗]$var[e_1bse;♗]$var[e_1n;♘]$var[e_1nc;♘]$var[e_1ne;♘]$var[e_1nsc;♘]$var[e_1nse;♘]$var[e_1p;♙]$var[e_1pc;♙]$var[e_1pe;♙]$var[e_1psc;♙]$var[e_1pse;♙]$var[e_2k;♚]$var[e_2kc;♚]$var[e_2ke;♚]$var[e_2ksc;♚]$var[e_2kse;♚]$var[e_2q;♛]$var[e_2qc;♛]$var[e_2qe;♛]$var[e_2qsc;♛]$var[e_2qse;♛]$var[e_2r;♜]$var[e_2rc;♜]$var[e_2re;♜]$var[e_2rsc;♜]$var[e_2rse;♜]$var[e_2b;♝]$var[e_2bc;♝]$var[e_2be;♝]$var[e_2bsc;♝]$var[e_2bse;♝]$var[e_2n;♞]$var[e_2nc;♞]$var[e_2ne;♞]$var[e_2nsc;♞]$var[e_2nse;♞]$var[e_2p;♟]$var[e_2pc;♟]$var[e_2pe;♟]$var[e_2psc;♟]$var[e_2pse;♟]$var[e_vc;⬜]$var[e_ve;⬛]$var[e_x0;🔲]$var[e_x1;1️⃣]$var[e_x2;2️⃣]$var[e_x3;3️⃣]$var[e_x4;4️⃣]$var[e_x5;5️⃣]$var[e_x6;6️⃣]$var[e_x7;7️⃣]$var[e_x8;8️⃣]$var[e_xa;🇦​]$var[e_xb;🇧​]$var[e_xc;🇨​]$var[e_xd;🇩​]$var[e_xe;🇪​]$var[e_xf;🇫​]$var[e_xg;🇬​]$var[e_xh;🇭​]$var[e_dA1;🟦]$var[e_dA2;🟦]$var[e_dA3;🟦]$var[e_dA4;🟦]$var[e_dA5;🟦]$var[e_dA6;🟦]$var[e_dA7;🟦]$var[e_dA8;🟦]$var[e_dB1;🟦]$var[e_dB2;🟦]$var[e_dB3;🟦]$var[e_dB4;🟦]$var[e_dB5;🟦]$var[e_dB6;🟦]$var[e_dB7;🟦]$var[e_dB8;🟦]$var[e_dC1;🟦]$var[e_dC2;🟦]$var[e_dC3;🟦]$var[e_dC4;🟦]$var[e_dC5;🟦]$var[e_dC6;🟦]$var[e_dC7;🟦]$var[e_dC8;🟦]$var[e_dD1;🟦]$var[e_dD2;🟦]$var[e_dD3;🟦]$var[e_dD4;🟦]$var[e_dD5;🟦]$var[e_dD6;🟦]$var[e_dD7;🟦]$var[e_dD8;🟦]$var[e_dE1;🟦]$var[e_dE2;🟦]$var[e_dE3;🟦]$var[e_dE4;🟦]$var[e_dE5;🟦]$var[e_dE6;🟦]$var[e_dE7;🟦]$var[e_dE8;🟦]$var[e_dF1;🟦]$var[e_dF2;🟦]$var[e_dF3;🟦]$var[e_dF4;🟦]$var[e_dF5;🟦]$var[e_dF6;🟦]$var[e_dF7;🟦]$var[e_dF8;🟦]$var[e_dG1;🟦]$var[e_dG2;🟦]$var[e_dG3;🟦]$var[e_dG4;🟦]$var[e_dG5;🟦]$var[e_dG6;🟦]$var[e_dG7;🟦]$var[e_dG8;🟦]$var[e_dH1;🟦]$var[e_dH2;🟦]$var[e_dH3;🟦]$var[e_dH4;🟦]$var[e_dH5;🟦]$var[e_dH6;🟦]$var[e_dH7;🟦]$var[e_dH8;🟦]$endif
+$textSplit[$getVar[ChessEmojis]; ]$var[ek;1]
+$var[rN;$floor[$calculate[$getTextSplitLength/2]]]$var[rB;$|var[en\;$|splitText[$|var[ek\]\]\]$|var[e_$|var[en\]\;<:$|var[en\]:$|splitText[$|sum[$|var[ek\]\;1\]\]>\]$|var[b_$|var[en\]\;$|var[e_$|var[en\]\]\]$|var[ek\;$|sum[$|var[ek\]\;2\]\]]$eval[$replaceText[$|c[mnsa 106\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 107\]$var[code];|;;-1]]$endif
+$textSplit[$var[emjSplit];⁂]
+
+
+$var[f1;A]$var[f2;B]$var[f3;C]$var[f4;D]$var[f5;E]$var[f6;F]$var[f7;G]$var[f8;H]
+$var[desenho;]$var[desenho1;]$var[novo;]$var[dests;]$var[Llp;]$var[Llr;]$var[Llbn;]$var[Llqk;]
+$if[$var[od]==1]$if[$var[sel]!=0]
+$var[ci;$modulo[$calculate[$var[sel]-1];8]]
+$var[smm;$calculate[10*(($var[sel]-1-$var[ci])/8+1)+$var[ci]+11]]
+$textSplit[$var[dm$var[smm]];>]
+$var[nh;$getTextSplitLength]
+$var[j;1]
+$var[rN;$var[nh]]$var[rB;$|var[hx$|var[j\]\;$|splitText[$|var[j\]\]\]$|var[j\;$|calculate[$|var[j\]+1\]\]]$eval[$replaceText[$|c[mnsa 108\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 109\]$var[code];|;;-1]]$endif
+$var[j;1]
+$var[rN;$var[nh]]$var[rB;$|var[x\;$|var[hx$|var[j\]\]\]$|var[hl$|var[x\]\;1\]$|var[xc\;$|modulo[$|var[x\]\;10\]\]$|var[dn\;d$|var[f$|var[xc\]\]$|calculate[10-($|var[x\]-$|var[xc\])/10\]\]$|var[j\;$|calculate[$|var[j\]+1\]\]]$eval[$replaceText[$|c[mnsa 110\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 111\]$var[code];|;;-1]]$endif
+$endif$endif
+$var[i;1]$var[r;1]$var[c;1]
+$var[code;$replaceText[$repeatMessage[2;$repeatMessage[8;$var[LP]$|var[v\;$|var[q$|var[mm\]\]\]
+$|var[tc\;e\]
+$|if[$|modulo[$|calculate[$|var[r\]+$|var[c\]\]\;2\]==0\]$|var[tc\;c\]$|endif
+$|if[$|var[v\]==.\]$|var[img\;$|var[e_v$|var[tc\]\]\]$|if[$|var[hl$|var[mm\]\]==1\]$|var[img\;$|var[e_d$|var[f$|var[c\]\]$|calculate[9-$|var[r\]\]\]\]$|endif
+$|elseif[$|var[i\]==$|var[sel\]\]$|var[img\;$|var[e_$|var[v\]$|var[tc\]\]\]$|if[$|var[oc\]==1\]$|var[img\;$|var[e_$|var[v\]s$|var[tc\]\]\]$|endif$|var[esel\;$|var[b_$|var[v\]\]\]$|var[nsel\;$|var[f$|var[c\]\]$|calculate[9-$|var[r\]\]\]$|var[dests\;$|var[dm$|var[mm\]\]\]$|var[ss\;$|var[mm\]\]
+$|elseif[1>0\]$|var[img\;$|var[e_$|var[v\]$|var[tc\]\]\]
+$|endif
+$|if[$|var[c\]==1\]$|if[$|var[og\]==1\]$|var[desenho\;$|var[desenho\]$|var[e_x$|calculate[9-$|var[r\]\]\]\]$|endif$|endif
+$|var[desenho\;$|var[desenho\]$|var[img\]\]
+$|var[cel\;$|var[v\]\]
+$|if[$|var[dm$|var[mm\]\]!=\]$|var[cel\;$|var[v\]:$|var[dm$|var[mm\]\]\]$|endif
+$|var[novo\;$|var[novo\]-$|var[cel\]\]
+$|if[$|checkContains[$|var[v\]\;$|var[vez\]\]==true\]
+$|var[lab$|var[i\]\;$|var[f$|var[c\]\]$|calculate[9-$|var[r\]\]\]
+$|var[em$|var[i\]\;$|var[b_$|var[v\]\]\]
+$|var[dis$|var[i\]\;no\]
+$|if[$|var[dm$|var[mm\]\]==\]$|var[dis$|var[i\]\;yes\]$|endif
+$|var[g\;lqk\]
+$|if[$|checkContains[$|var[v\]\;p\]==true\]$|var[g\;lp\]$|endif
+$|if[$|checkContains[$|var[v\]\;r\]==true\]$|var[g\;lr\]$|endif
+$|if[$|checkContains[$|var[v\]\;b\;n\]==true\]$|var[g\;lbn\]$|endif
+$|if[$|var[L$|var[g\]\]==\]$|var[L$|var[g\]\;$|var[i\]\]$|elseif[1>0\]$|var[L$|var[g\]\;$|var[L$|var[g\]\]-$|var[i\]\]$|endif
+$|endif
+$|if[$|var[c\]==8\]$|var[desenho\;$|var[desenho\]
+\]$|if[$|var[r\]==5\]$|var[desenho1\;$|var[desenho\]\]$|var[desenho\;\]$|endif$|endif$var[LS]]];|;;-1]]
+$eval[$replaceText[$|c[mnsa 112\]$|var[k64\;1\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 113\]$|var[k64\;2\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 114\]$|var[k64\;3\];|;;-1]$var[code]]$eval[$replaceText[$|c[mnsa 115\]$|var[k64\;4\];|;;-1]$var[code]]
+$if[$var[og]==1]$var[desenho;$var[desenho]$var[e_x0]$var[e_xa]$var[e_xb]$var[e_xc]$var[e_xd]$var[e_xe]$var[e_xf]$var[e_xg]$var[e_xh]]$endif
+$var[novo;$replaceText[$var[novo];-;;1]]
+
+$if[$var[acao]==pgnm]
+$if[$var[nmv]==0]$ephemeral That PGN ends with the game already over (checkmate or stalemate): there is nothing to continue. $stop $endif
+$if[$charCount[$var[sanl]]>1000]$ephemeral That PGN is too long to import: the limit is 140 half-moves. $stop $endif
+$var[pgni;$var[vez]-$var[cr]-$var[ep]-$var[chk]-$var[np]]$var[tb;$var[novo]]
+$var[pgnv;$var[sanl]]
+$var[og;$var[cog]]$var[oc;$var[coc]]$var[od;$var[cod]]$var[ab;0]$var[ap;0]
+$var[st;invite-$var[brancas]-$var[pretas]-$var[og]-$var[oc]-$var[od]-0-0-$var[ot]]$var[at;$getTimestamp]$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
+$removeButtons
+$var[sim1;✅ on]$var[sim0;❌ off]$var[ok1;✅]$var[ok0;⏳]
+$var[otxt;off]$if[$var[ot]>0]$var[otxt;$var[ot] min each, +2 s per move]$endif
+$var[dica;]$if[$getVar[ChessEmojis]==]$var[dica;
+
+💡 This board uses standard emojis. For the real chess board, install the chess emojis: <https://mnsa.com.br/ferramentas/chess-emojis/>]$endif
+$var[pinfo;Starts from the initial position.]
+$if[$var[pgni]!=]$var[cvez1;white]$var[cvez2;black]$textSplit[$var[pgni];-]$var[pinfo;📋 Starts from the imported PGN: $splitText[5] half-moves, $var[cvez$splitText[1]] to move.]$endif
+$title[♟️ Chess challenge]
+$var[quem;⚪ <@$var[brancas]> plays white
+⚫ <@$var[pretas]> plays black]
+$var[aceite;$var[ok$var[ab]] <@$var[brancas]>   $var[ok$var[ap]] <@$var[pretas]>]
+$if[$var[brancas]==$var[pretas]]$var[quem;<@$var[brancas]> plays both white and black]$var[aceite;$var[ok$var[ab]] <@$var[brancas]>]$endif
+$description[$var[quem]
+
+**Settings**
+Board coordinates: $var[sim$var[og]]
+Blue outline on the selected piece: $var[sim$var[oc]]
+Legal moves on the board: $var[sim$var[od]]
+Clock: $var[otxt]
+
+$var[pinfo]
+
+**Accepted:** $var[aceite]
+Changing a setting or swapping colors asks both players to accept again.$var[dica][⠀\](https://discord.com/#$var[dados])]
+$color[5865F2]
+$var[es;secondary]$if[$var[og]==1]$var[es;success]$endif$addButton[no;xz-cfg-g;Coordinates;$var[es];no]
+$var[es;secondary]$if[$var[oc]==1]$var[es;success]$endif$addButton[no;xz-cfg-c;Outline;$var[es];no]
+$var[es;secondary]$if[$var[od]==1]$var[es;success]$endif$addButton[no;xz-cfg-d;Moves;$var[es];no]
+$var[es;secondary]$if[$var[ot]>0]$var[es;success]$endif$addButton[no;xz-tmp;+5 min;$var[es];no;⏱️]
+$addButton[no;xz-tmq;-5 min;secondary;no]
+$addButton[yes;xz-cor;Swap colors;secondary;no;🔄]
+$addButton[no;xz-pgn;Import PGN;secondary;no;📋]
+$if[$var[pgni]!=]$addButton[no;xz-pgnx;Clear PGN;secondary;no]$endif
+$addButton[yes;xz-ok;Accept;success;no;✅]
+$addButton[no;xz-no;Decline;danger;no]
+$stop
+$endif
+$if[$var[acao]==mv]
+$var[ultimo;Last move: $var[e_$var[pc]] $var[f$var[sc]]$calculate[10-($var[ls]-$var[sc])/10] → $var[f$var[tcl]]$calculate[10-($var[lt]-$var[tcl])/10]$var[comeu].
+]
+$if[$var[nmv]==0]
+$var[ganhou;$splitText[$sum[$var[a];1]]]
+$var[fim;♚ **Checkmate!** <@$var[ganhou]> wins!]
+$if[$var[chk]==0]$var[fim;🤝 **Stalemate.** The side to move has no legal move and is not in check: draw.]$endif
+$var[pgnt;]
+$if[$var[pgnv]!=]
+$textSplit[$var[pgnv]; ]
+$var[j;1]
+$var[rN;$getTextSplitLength]$var[rB;$|if[$|modulo[$|var[j\]\;2\]==1\]$|var[pgnt\;$|var[pgnt\]$|calculate[($|var[j\]+1)/2\]. \]$|endif$|var[pgnt\;$|var[pgnt\]$|splitText[$|var[j\]\] \]$|var[j\;$|calculate[$|var[j\]+1\]\]]$var[rQ;100]$eval[$replaceText[$|c[mnsa 116\];|;;-1]$var[RG]]$var[rX;$replaceText[$var[rX];|;;-1]]$var[code;$replaceText[$var[code];|;;-1]]
+$if[$var[rK]>=1]$eval[$replaceText[$|c[mnsa 117\]$|var[rI\;1\];|;;-1]$var[rX]]$endif$if[$var[rK]>=2]$eval[$replaceText[$|c[mnsa 118\]$|var[rI\;2\];|;;-1]$var[rX]]$endif$if[$var[rK]>=3]$eval[$replaceText[$|c[mnsa 119\]$|var[rI\;3\];|;;-1]$var[rX]]$endif$if[$var[rK]>=4]$eval[$replaceText[$|c[mnsa 120\]$|var[rI\;4\];|;;-1]$var[rX]]$endif$if[$var[rK]>=5]$eval[$replaceText[$|c[mnsa 121\]$|var[rI\;5\];|;;-1]$var[rX]]$endif
+$if[$var[rR]>0]$eval[$replaceText[$|c[mnsa 122\];|;;-1]$var[code]]$endif
+$endif
+$var[pgnbox;```
+$var[pgnt]
+```]
+$removeButtons
+$title[♟️ Chess]
+$description[$var[desenho1]$var[desenho]
+$var[pgnbox]]$addField[⠀;$var[ultimo]$var[fim]]
+$color[5865F2]
+$stop
+$endif
+$var[st;game-$var[brancas]-$var[pretas]-$var[vez]-$var[cr]-$var[ep]-$var[chk]-$var[og]-$var[oc]-$var[od]-$var[t1]-$var[t2]]$var[tb;$var[novo]]$var[at;$getTimestamp]$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
+$endif
+$var[dados;$var[st]~$replaceText[$var[tb];>;,;-1]~$var[pgni]~$var[at]~$replaceText[$var[pgnv]; ;_;-1]]
+$description[$var[desenho1]$var[desenho][⠀\](https://discord.com/#$var[dados])]
+
+$removeButtons
+$if[$var[acao]==promo]
+$if[$var[b_$var[vez]p]==]$addButton[no;xz-rot-pr;Pawn on $var[npr] becomes;secondary;yes]$elseif[1>0]$addButton[no;xz-rot-pr;Pawn on $var[npr] becomes;secondary;yes;$var[b_$var[vez]p]]$endif
+$if[$var[b_$var[vez]q]==]$addButton[yes;xz-mv-$var[s]-$var[t]-q;Queen;primary;no]$elseif[1>0]$addButton[yes;xz-mv-$var[s]-$var[t]-q;Queen;primary;no;$var[b_$var[vez]q]]$endif
+$if[$var[b_$var[vez]r]==]$addButton[no;xz-mv-$var[s]-$var[t]-r;Rook;primary;no]$elseif[1>0]$addButton[no;xz-mv-$var[s]-$var[t]-r;Rook;primary;no;$var[b_$var[vez]r]]$endif
+$if[$var[b_$var[vez]b]==]$addButton[no;xz-mv-$var[s]-$var[t]-b;Bishop;primary;no]$elseif[1>0]$addButton[no;xz-mv-$var[s]-$var[t]-b;Bishop;primary;no;$var[b_$var[vez]b]]$endif
+$if[$var[b_$var[vez]n]==]$addButton[no;xz-mv-$var[s]-$var[t]-n;Knight;primary;no]$elseif[1>0]$addButton[no;xz-mv-$var[s]-$var[t]-n;Knight;primary;no;$var[b_$var[vez]n]]$endif
+$addButton[yes;xz-sel-$var[sel];◀ Back;secondary;no]
+$var[aviso;**Promotion!** Pick the new piece.]
+$elseif[$var[dests]!=]
+$if[$var[esel]==]$addButton[no;xz-rot-d;$var[nsel] to;secondary;yes]$elseif[1>0]$addButton[no;xz-rot-d;$var[nsel] to;secondary;yes;$var[esel]]$endif
+$textSplit[$var[dests];>]
+$var[nd;$getTextSplitLength]
+$var[j;$calculate[($var[dp]-1)*15+1]]
+$var[nl;5]
+$var[rN;$min[15;$calculate[$var[nd]-$var[j]+1]]]$var[rB;$|var[x\;$|splitText[$|var[j\]\]\]
+$|var[nr\;no\]
+$|if[$|var[nl\]==5\]$|var[nr\;yes\]$|var[nl\;0\]$|endif
+$|var[est\;success\]$|var[em\;\]
+$|if[$|var[q$|var[x\]\]!=.\]$|var[est\;danger\]$|var[em\;$|var[b_$|var[q$|var[x\]\]\]\]$|endif
+$|var[xc\;$|modulo[$|var[x\]\;10\]\]
+$|if[$|var[em\]==\]$|addButton[$|var[nr\]\;xz-mv-$|var[ss\]-$|var[x\]\;$|var[f$|var[xc\]\]$|calculate[10-($|var[x\]-$|var[xc\])/10\]\;$|var[est\]\;no\]$|elseif[1>0\]$|addButton[$|var[nr\]\;xz-mv-$|var[ss\]-$|var[x\]\;$|var[f$|var[xc\]\]$|calculate[10-($|var[x\]-$|var[xc\])/10\]\;$|var[est\]\;no\;$|var[em\]\]$|endif
+$|var[nl\;$|calculate[$|var[nl\]+1\]\]
+$|var[j\;$|calculate[$|var[j\]+1\]\]
+]$eval[$replaceText[$|c[mnsa 123\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 124\]$var[code];|;;-1]]$endif
+$addButton[yes;xz-pag-$var[pag];◀ Back;secondary;no]
+$if[$var[nd]>$calculate[$var[dp]*15]]$addButton[no;xz-sel-$var[sel]-$sum[$var[dp];1];More ▶;primary;no]$endif
+$var[aviso;Selected: $var[esel] $var[nsel]. Where to?]
+$elseif[1>0]
+$var[gl1;lp]$var[gn1;Pawns]$var[gl2;lr]$var[gn2;Rooks]$var[gl3;lbn]$var[gn3;Bishops & Knights]$var[gl4;lqk]$var[gn4;Royals]
+$if[$var[L$var[gl$var[pag]]]==]$var[pag;4]$if[$var[Llbn]!=]$var[pag;3]$endif$if[$var[Llr]!=]$var[pag;2]$endif$if[$var[Llp]!=]$var[pag;1]$endif$endif
+$addButton[no;xz-rot-g;$var[gn$var[pag]];secondary;yes]
+$textSplit[$var[L$var[gl$var[pag]]];-]
+$var[nl;5]$var[j;1]
+$var[rN;$getTextSplitLength]$var[rB;$|var[x\;$|splitText[$|var[j\]\]\]
+$|var[nr\;no\]
+$|if[$|var[nl\]==5\]$|var[nr\;yes\]$|var[nl\;0\]$|endif
+$|var[est\;secondary\]
+$|if[$|var[x\]==$|var[sel\]\]$|var[est\;primary\]$|endif
+$|if[$|var[em$|var[x\]\]==\]$|addButton[$|var[nr\]\;xz-sel-$|var[x\]\;$|var[lab$|var[x\]\]\;$|var[est\]\;$|var[dis$|var[x\]\]\]$|elseif[1>0\]$|addButton[$|var[nr\]\;xz-sel-$|var[x\]\;$|var[lab$|var[x\]\]\;$|var[est\]\;$|var[dis$|var[x\]\]\;$|var[em$|var[x\]\]\]$|endif
+$|var[nl\;$|calculate[$|var[nl\]+1\]\]
+$|var[j\;$|calculate[$|var[j\]+1\]\]
+]$eval[$replaceText[$|c[mnsa 125\];|;;-1]$var[REP]]
+$if[$var[rN]>0]$eval[$replaceText[$|c[mnsa 126\]$var[code];|;;-1]]$endif
+$var[es;secondary]$if[$var[pag]==1]$var[es;primary]$endif$var[ds;no]$if[$var[Llp]==]$var[ds;yes]$endif$addButton[yes;xz-pag-1;Pawns;$var[es];$var[ds]]
+$var[es;secondary]$if[$var[pag]==2]$var[es;primary]$endif$var[ds;no]$if[$var[Llr]==]$var[ds;yes]$endif$addButton[no;xz-pag-2;Rooks;$var[es];$var[ds]]
+$var[es;secondary]$if[$var[pag]==3]$var[es;primary]$endif$var[ds;no]$if[$var[Llbn]==]$var[ds;yes]$endif$addButton[no;xz-pag-3;Bishops & Knights;$var[es];$var[ds]]
+$var[es;secondary]$if[$var[pag]==4]$var[es;primary]$endif$var[ds;no]$if[$var[Llqk]==]$var[ds;yes]$endif$addButton[no;xz-pag-4;Royals;$var[es];$var[ds]]
+$endif
+$addButton[no;xz-desistir;Resign;danger;no;🏳️]
+$var[cor;white ⚪]
+$if[$var[vez]==2]$var[cor;black ⚫]$endif
+$title[♟️ Chess]
+$var[relogio;]
+$if[$var[t1]>0]$var[s1;$modulo[$var[t1];60]]$if[$var[s1]<10]$var[s1;0$var[s1]]$endif$var[s2;$modulo[$var[t2];60]]$if[$var[s2]<10]$var[s2;0$var[s2]]$endif$var[relogio;⏱️ ⚪ $floor[$calculate[$var[t1]/60]]:$var[s1] · ⚫ $floor[$calculate[$var[t2]/60]]:$var[s2]
+]$endif
+$addField[⠀;$var[ultimo]$var[xeque]$var[relogio]<@$var[jogador]> to move, $var[cor]. $var[aviso]]
+$color[5865F2]
+
